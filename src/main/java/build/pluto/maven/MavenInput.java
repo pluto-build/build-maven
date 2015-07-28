@@ -7,6 +7,8 @@ public class MavenInput implements Serializable {
 
     private static final long serialVersionUID = 89438938480L;
 
+    public final File localRepoLocation;
+
     public final String groupID;
     public final String artifactID;
     public final String version;
@@ -18,6 +20,7 @@ public class MavenInput implements Serializable {
 
 
     private MavenInput(Builder builder) {
+        this.localRepoLocation = builder.localRepoLocation;
         this.groupID = builder.groupID;
         this.artifactID = builder.artifactID;
         this.version = builder.version;
@@ -28,6 +31,8 @@ public class MavenInput implements Serializable {
     }
 
     public static class Builder {
+        private File localRepoLocation;
+
         private String groupID;
         private String artifactID;
         private String version;
@@ -39,10 +44,12 @@ public class MavenInput implements Serializable {
         private long consistencyCheckInterval = 0;
 
         public Builder (
+                File localRepoLocation,
                 String groupID,
                 String artifactID,
                 String version,
                 File summaryLocation) {
+            this.localRepoLocation = localRepoLocation;
             this.groupID = groupID;
             this.artifactID = artifactID;
             this.version = version;
