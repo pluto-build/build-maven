@@ -27,8 +27,6 @@ public class MavenHandlerTest {
                 null,
                 "default",
                 "https://raw.githubusercontent.com/pluto-build/pluto-build.github.io/master/mvnrepository/");
-        List<File> x =
-            handler.resolveDependencies("build.pluto", "pluto", "LATEST", "[0,)");
         String version =  handler.getHighestRemoteVersion("build.pluto", "pluto", "[0,)");
         assertEquals("1.4.0-SNAPSHOT", version);
     }
