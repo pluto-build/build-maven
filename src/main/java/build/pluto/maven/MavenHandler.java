@@ -170,14 +170,12 @@ public class MavenHandler {
         request.setRepositories(repos);
         VersionRangeResult result = system.resolveVersionRange(this.session, request);
         List<String> possibleVersions = new ArrayList<>();
-        System.out.println("RANGE" + version);
         for(Version v : result.getVersions()) {
-            System.out.println(v.toString());
             possibleVersions.add(v.toString());
         }
         return possibleVersions;
     }
-    
+
     private String getHighestVersion(
             String groupID,
             String artifactID,
