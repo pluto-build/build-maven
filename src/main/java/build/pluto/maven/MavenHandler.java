@@ -120,6 +120,44 @@ public class MavenHandler {
                 Arrays.asList(this.remote));
     }
 
+    public String getHighestLocalVersion(
+            String groupID,
+            String artifactID,
+            String versionConstraintString) throws VersionRangeResolutionException {
+        String groupIDStructure = groupID.replace(".", "/");
+        String artifactPathString = local.getBasedir().getAbsolutePath() + "/" + groupIDStructure + "/" + artifactID;
+        AbsolutePath artifactPath = new AbsolutePath(artifactPathString);
+        List<Version> versionList = new ArrayList<>();
+        VersionScheme versionScheme = new GenericVersionScheme();
+        VersionConstraint versionConstraint;
+        try {
+            versionConstraint = versionScheme.parseVersionConstraint(versionConstraintString);
+        } catch(InvalidVersionSpecificationException e) {
+            System.out.println("VersionRange is not valid");
+            return null;
+        }
+        //get versions in constraint
+        for(RelativePath p : FileCommands.listFiles(artifactPath)) {
+            if(p.getFile().isDirectory()) {
+                try {
+                    Version version = versionScheme.parseVersion(p.getFile().getName());
+                    if(versionConstraint.containsVersion(version)) {
+                        versionList.add(version);
+                    }
+                } catch(InvalidVersionSpecificationException e) {
+                }
+            }
+        }
+        //sort versions
+        Collections.sort(versionList);
+        int indexOfLastElement = versionList.size() - 1;
+        if (indexOfLastElement == -1) {
+            return null;
+        }
+        return versionList.get(indexOfLastElement).toString();
+    }
+
+
     private List<String> getPossibleVersionOfRange(
             String groupID,
             String artifactID,

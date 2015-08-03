@@ -39,6 +39,34 @@ public class MavenHandlerTest {
     }
 
     @Test
+    public void testGetHighestLocalVersionOfRange() throws Exception {
+        File localRepo = new File("test5");
+        MavenHandler handler = new MavenHandler(localRepo);
+        String groupID = "com.google.android";
+        String artifactID = "android";
+        String version = "4.1.1.4";
+        handler.resolveDependencies(groupID, artifactID, null, version);
+        version = "4.0.1.2";
+        handler.resolveDependencies(groupID, artifactID, null, version);
+        version = "2.3.3";
+        handler.resolveDependencies(groupID, artifactID, null, version);
+        String newestVersion = handler.getHighestLocalVersion(groupID, artifactID, "[0,)");
+        assertEquals("4.1.1.4", newestVersion);
+    }
+
+    @Test
+    public void testGetHighestLocalVersionOfSingle() throws Exception {
+        File localRepo = new File("test5");
+        MavenHandler handler = new MavenHandler(localRepo);
+        String groupID = "com.google.android";
+        String artifactID = "android";
+        String version = "4.1.1.4";
+        handler.resolveDependencies(groupID, artifactID, null, version);
+        String newestVersion = handler.getHighestLocalVersion(groupID, artifactID, version);
+        assertEquals("4.1.1.4", newestVersion);
+    }
+
+    @Test
     public void testGetHighestRemoteVersionSmallerThan() throws Exception {
         File localRepo = new File("test3");
         MavenHandler handler = new MavenHandler(localRepo);
