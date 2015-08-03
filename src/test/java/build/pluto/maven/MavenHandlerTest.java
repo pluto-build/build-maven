@@ -20,6 +20,20 @@ public class MavenHandlerTest {
     }
 
     @Test
+    public void testResolveDependenciesOnOtherRepo() throws Exception {
+        File localRepo = new File("test2");
+        MavenHandler handler = new MavenHandler(
+                localRepo,
+                null,
+                "default",
+                "https://raw.githubusercontent.com/pluto-build/pluto-build.github.io/master/mvnrepository/");
+        List<File> x =
+            handler.resolveDependencies("build.pluto", "pluto", "LATEST", "[0,)");
+        String version =  handler.getHighestRemoteVersion("build.pluto", "pluto", "[0,)");
+        assertEquals("1.4.0-SNAPSHOT", version);
+    }
+
+    @Test
     public void testGetHighestRemoteVersion() throws Exception {
         File localRepo = new File("test3");
         MavenHandler handler = new MavenHandler(localRepo);
