@@ -16,27 +16,38 @@ public class MavenHandlerTest {
         MavenHandler handler = new MavenHandler(localRepo);
         List<File> jarLocations =
             handler.resolveDependencies("com.google.android", "android", null, "4.1.1.4");
-        assertEquals(9, jarLocations.size()); 
-    }
-
-    // @Test
-    public void testResolveDependencies2() throws Exception {
-        File localRepo = new File("test2");
-        MavenHandler handler = new MavenHandler(
-                localRepo,
-                "central",
-                "default",
-                "https://raw.githubusercontent.com/pluto-build/pluto-build.github.io/master/mvnrepository/");
-        List<File> x =
-            handler.resolveDependencies("build.pluto", "pluto", null, "1.4.0");
-        System.out.println(x.size());
+        assertEquals(9, jarLocations.size());
     }
 
     @Test
     public void testGetHighestRemoteVersion() throws Exception {
         File localRepo = new File("test3");
         MavenHandler handler = new MavenHandler(localRepo);
-        String newestVersion = handler.getHighestRemoteVersion("com.google.android", "android");
+        String newestVersion = handler.getHighestRemoteVersion("com.google.android", "android", "[0,)");
         assertEquals("4.1.1.4", newestVersion);
+    }
+
+    @Test
+    public void testGetHighestRemoteVersionSmallerThan() throws Exception {
+        File localRepo = new File("test3");
+        MavenHandler handler = new MavenHandler(localRepo);
+        String newestVersion = handler.getHighestRemoteVersion("com.google.android", "android", "(,4.1.1.4)");
+        assertEquals("4.0.1.2", newestVersion);
+    }
+
+    @Test
+    public void testGetNoVersionWithBiggerThan() throws Exception {
+        File localRepo = new File("test3");
+        MavenHandler handler = new MavenHandler(localRepo);
+        String newestVersion = handler.getHighestRemoteVersion("com.google.android", "android", "(4.1.1.4,)");
+        assertEquals(null, newestVersion);
+    }
+
+    @Test
+    public void testGetNoVersionWithExactVersion() throws Exception {
+        File localRepo = new File("test3");
+        MavenHandler handler = new MavenHandler(localRepo);
+        String newestVersion = handler.getHighestRemoteVersion("com.google.android", "android", "[1.5_r0]");
+        assertEquals(null, newestVersion);
     }
 }

@@ -107,17 +107,48 @@ public class MavenHandler {
         return locationList;
     }
 
-    public String getHighestRemoteVersion(String groupID,String artifactID) throws VersionRangeResolutionException {
+    public String getHighestRemoteVersion(
+            String groupID,
+            String artifactID,
+            String version) throws VersionRangeResolutionException {
+        return this.getHighestVersion(
+                groupID,
+                artifactID,
+                version,
+                Arrays.asList(this.remote));
+    }
+
+    private List<String> getPossibleVersionOfRange(
+            String groupID,
+            String artifactID,
+            String version,
+            List<RemoteRepository> repos) throws VersionRangeResolutionException {
         Artifact artifact =
-            new DefaultArtifact(groupID+":"+artifactID+":[0,)");
+            new DefaultArtifact(groupID + ":" + artifactID + ":" + version);
         VersionRangeRequest request = new VersionRangeRequest();
         request.setArtifact(artifact);
-        request.setRepositories(Arrays.asList(this.remote));
+        request.setRepositories(repos);
         VersionRangeResult result = system.resolveVersionRange(this.session, request);
+        List<String> possibleVersions = new ArrayList<>();
+        System.out.println("RANGE" + version);
         for(Version v : result.getVersions()) {
             System.out.println(v.toString());
+            possibleVersions.add(v.toString());
         }
-        Version newestVersion = result.getHighestVersion();
-        return newestVersion.toString();
+        return possibleVersions;
+    }
+    
+    private String getHighestVersion(
+            String groupID,
+            String artifactID,
+            String version,
+            List<RemoteRepository> repos) throws VersionRangeResolutionException {
+        List<String> possibleVersions =
+            this.getPossibleVersionOfRange(groupID, artifactID, version, repos);
+        int lastElementIndex = possibleVersions.size() - 1;
+        if (lastElementIndex == -1) {
+            return null;
+        }
+        return possibleVersions.get(lastElementIndex);
     }
 }
