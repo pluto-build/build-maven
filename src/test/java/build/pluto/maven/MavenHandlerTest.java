@@ -1,10 +1,9 @@
 package build.pluto.maven;
 
-import build.pluto.maven.MavenHandler;
+import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
-import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
