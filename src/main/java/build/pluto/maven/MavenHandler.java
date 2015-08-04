@@ -1,9 +1,10 @@
 package build.pluto.maven;
 
+import build.pluto.maven.Artifact;
+
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;
-import org.eclipse.aether.artifact.Artifact;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
@@ -87,12 +88,12 @@ public class MavenHandler {
             String classifier,
             String version) throws DependencyResolutionException {
 
-        Artifact artifact =
+        DefaultArtifact aetherArtifact =
             new DefaultArtifact(groupID+":"+artifactID+":"+version);
         DependencyFilter dependencyFilter =
             DependencyFilterUtils.classpathFilter( JavaScopes.COMPILE );
         CollectRequest collectRequest = new CollectRequest();
-        collectRequest.setRoot(new Dependency(artifact, JavaScopes.COMPILE));
+        collectRequest.setRoot(new Dependency(aetherArtifact, JavaScopes.COMPILE));
         collectRequest.setRepositories(Arrays.asList(this.remote));
 
         DependencyRequest dependencyRequest =
@@ -103,35 +104,30 @@ public class MavenHandler {
                   .getArtifactResults();
         List<File> locationList = new ArrayList<>();
         for (ArtifactResult ar : artifactResultList) {
-            Artifact a = ar.getArtifact();
-            locationList.add(a.getFile());
+            locationList.add(ar.getArtifact().getFile());
         }
         return locationList;
     }
 
     public String getHighestRemoteVersion(
-            String groupID,
-            String artifactID,
-            String version) throws VersionRangeResolutionException {
+            Artifact artifact) throws VersionRangeResolutionException {
         return this.getHighestVersion(
-                groupID,
-                artifactID,
-                version,
+                artifact,
                 Arrays.asList(this.remote));
     }
 
     public String getHighestLocalVersion(
-            String groupID,
-            String artifactID,
-            String versionConstraintString) throws VersionRangeResolutionException {
-        String groupIDStructure = groupID.replace(".", "/");
-        String artifactPathString = local.getBasedir().getAbsolutePath() + "/" + groupIDStructure + "/" + artifactID;
+            Artifact artifact) throws VersionRangeResolutionException {
+        String groupIDStructure = artifact.groupID.replace(".", "/");
+        String artifactPathString = local.getBasedir().getAbsolutePath()
+            + "/" + groupIDStructure + "/" + artifact.artifactID;
         AbsolutePath artifactPath = new AbsolutePath(artifactPathString);
         List<Version> versionList = new ArrayList<>();
         VersionScheme versionScheme = new GenericVersionScheme();
         VersionConstraint versionConstraint;
         try {
-            versionConstraint = versionScheme.parseVersionConstraint(versionConstraintString);
+            versionConstraint =
+                versionScheme.parseVersionConstraint(artifact.versionConstraint);
         } catch(InvalidVersionSpecificationException e) {
             System.out.println("VersionRange is not valid");
             return null;
@@ -159,14 +155,15 @@ public class MavenHandler {
 
 
     private List<String> getPossibleVersionOfRange(
-            String groupID,
-            String artifactID,
-            String version,
+            Artifact artifact,
             List<RemoteRepository> repos) throws VersionRangeResolutionException {
-        Artifact artifact =
-            new DefaultArtifact(groupID + ":" + artifactID + ":" + version);
+        DefaultArtifact aetherArtifact = new DefaultArtifact(artifact.groupID,
+                artifact.artifactID,
+                artifact.classifier,
+                artifact.extension,
+                artifact.versionConstraint);
         VersionRangeRequest request = new VersionRangeRequest();
-        request.setArtifact(artifact);
+        request.setArtifact(aetherArtifact);
         request.setRepositories(repos);
         VersionRangeResult result = system.resolveVersionRange(this.session, request);
         List<String> possibleVersions = new ArrayList<>();
@@ -177,12 +174,10 @@ public class MavenHandler {
     }
 
     private String getHighestVersion(
-            String groupID,
-            String artifactID,
-            String version,
+            Artifact artifact,
             List<RemoteRepository> repos) throws VersionRangeResolutionException {
         List<String> possibleVersions =
-            this.getPossibleVersionOfRange(groupID, artifactID, version, repos);
+            this.getPossibleVersionOfRange(artifact, repos);
         int lastElementIndex = possibleVersions.size() - 1;
         if (lastElementIndex == -1) {
             return null;
