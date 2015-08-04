@@ -10,6 +10,7 @@ import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyFilter;
+import org.eclipse.aether.graph.Exclusion;
 import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.RemoteRepository;
@@ -83,23 +84,21 @@ public class MavenHandler {
     }
 
     public List<File> resolveDependencies(
-            String groupID,
-            String artifactID,
-            String classifier,
-            String version) throws DependencyResolutionException {
+            Artifact artifact) throws DependencyResolutionException {
+        return resolveDependencies(Arrays.asList(artifact));
+    }
 
-        DefaultArtifact aetherArtifact =
-            new DefaultArtifact(groupID+":"+artifactID+":"+version);
-        DependencyFilter dependencyFilter =
-            DependencyFilterUtils.classpathFilter( JavaScopes.COMPILE );
+
+    public List<File> resolveDependencies(
+            List<Artifact> artifacts) throws DependencyResolutionException {
         CollectRequest collectRequest = new CollectRequest();
-        collectRequest.setRoot(new Dependency(aetherArtifact, JavaScopes.COMPILE));
-        collectRequest.setRepositories(Arrays.asList(this.remote));
-
-        DependencyRequest dependencyRequest =
-            new DependencyRequest(collectRequest, dependencyFilter);
-
-        List<ArtifactResult> artifactResultList =
+        for(Artifact a : artifacts) {
+            collectRequest.addDependency(createDependency(a));
+        }
+        collectRequest.addRepository(remote);
+        DependencyRequest dependencyRequest = new DependencyRequest();
+        dependencyRequest.setCollectRequest(collectRequest);
+        List<ArtifactResult>  artifactResultList =
             system.resolveDependencies(session, dependencyRequest)
                   .getArtifactResults();
         List<File> locationList = new ArrayList<>();
@@ -107,6 +106,37 @@ public class MavenHandler {
             locationList.add(ar.getArtifact().getFile());
         }
         return locationList;
+    }
+
+    private Dependency createDependency(Artifact artifact) {
+        DefaultArtifact aetherArtifact = createDefaultArtifact(artifact);
+        Dependency result = new Dependency(aetherArtifact, JavaScopes.COMPILE);
+        List<Exclusion> exclusions = new ArrayList<>();
+        for (Artifact a : artifact.exclusions) {
+            Exclusion e = new Exclusion(a.groupID, a.artifactID, a.classifier, a.extension);
+            exclusions.add(e);
+        }
+        result.setExclusions(exclusions);
+        result.setOptional(artifact.optional);
+        //TODO:scope?
+        return result;
+    }
+
+    public DefaultArtifact createDefaultArtifact(Artifact artifact) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(artifact.groupID).append(":");
+        sb.append(artifact.artifactID);
+        if (artifact.extension != null) {
+            sb.append(":");
+            sb.append(artifact.extension);
+            if (artifact.classifier != null) {
+                sb.append(":");
+                sb.append(artifact.classifier);
+            }
+        }
+        sb.append(":");
+        sb.append(artifact.versionConstraint);
+        return new DefaultArtifact(sb.toString());
     }
 
     public String getHighestRemoteVersion(
@@ -164,16 +194,10 @@ public class MavenHandler {
         }
     }
 
-
     private List<String> getPossibleVersionOfRange(
             Artifact artifact,
             List<RemoteRepository> repos) throws VersionRangeResolutionException {
-        DefaultArtifact aetherArtifact = new DefaultArtifact(
-                artifact.groupID,
-                artifact.artifactID,
-                artifact.classifier,
-                artifact.extension,
-                artifact.versionConstraint);
+        DefaultArtifact aetherArtifact = createDefaultArtifact(artifact);
         VersionRangeRequest request = new VersionRangeRequest();
         request.setArtifact(aetherArtifact);
         request.setRepositories(repos);

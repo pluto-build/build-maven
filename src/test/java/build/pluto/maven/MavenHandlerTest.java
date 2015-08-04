@@ -15,11 +15,13 @@ public class MavenHandlerTest {
     public void testResolveDependencies() throws Exception {
         File localRepo = new File("test");
         MavenHandler handler = new MavenHandler(localRepo);
-        List<File> jarLocations = handler.resolveDependencies(
+        Artifact artifact = new Artifact(
                 "com.google.android",
                 "android",
+                "4.1.1.4",
                 null,
-                "4.1.1.4");
+                null);
+        List<File> jarLocations = handler.resolveDependencies(artifact);
         assertEquals(9, jarLocations.size());
     }
 
@@ -54,12 +56,6 @@ public class MavenHandlerTest {
         MavenHandler handler = new MavenHandler(localRepo);
         String groupID = "com.google.android";
         String artifactID = "android";
-        String version = "4.1.1.4";
-        handler.resolveDependencies(groupID, artifactID, null, version);
-        version = "4.0.1.2";
-        handler.resolveDependencies(groupID, artifactID, null, version);
-        version = "2.3.3";
-        handler.resolveDependencies(groupID, artifactID, null, version);
         Artifact artifact =
             new Artifact(groupID, artifactID, "[0,)", null, null);
         String newestVersion = handler.getHighestLocalVersion(artifact);
@@ -73,7 +69,6 @@ public class MavenHandlerTest {
         String groupID = "com.google.android";
         String artifactID = "android";
         String version = "4.1.1.4";
-        handler.resolveDependencies(groupID, artifactID, null, version);
         Artifact artifact = new Artifact(groupID, artifactID, version, null, null);
         String newestVersion = handler.getHighestLocalVersion(artifact);
         assertEquals("4.1.1.4", newestVersion);
