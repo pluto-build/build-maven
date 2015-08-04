@@ -88,7 +88,6 @@ public class MavenHandler {
         return resolveDependencies(Arrays.asList(artifact));
     }
 
-
     public List<File> resolveDependencies(
             List<Artifact> artifacts) throws DependencyResolutionException {
         CollectRequest collectRequest = new CollectRequest();
@@ -129,10 +128,10 @@ public class MavenHandler {
         if (artifact.extension != null) {
             sb.append(":");
             sb.append(artifact.extension);
-            if (artifact.classifier != null) {
-                sb.append(":");
-                sb.append(artifact.classifier);
-            }
+        }
+        if (artifact.classifier != null) {
+            sb.append(":");
+            sb.append(artifact.classifier);
         }
         sb.append(":");
         sb.append(artifact.versionConstraint);
