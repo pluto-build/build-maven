@@ -123,25 +123,17 @@ public class MavenHandler {
             + "/" + groupIDStructure + "/" + artifact.artifactID;
         AbsolutePath artifactPath = new AbsolutePath(artifactPathString);
         List<Version> versionList = new ArrayList<>();
-        VersionScheme versionScheme = new GenericVersionScheme();
-        VersionConstraint versionConstraint;
-        try {
-            versionConstraint =
-                versionScheme.parseVersionConstraint(artifact.versionConstraint);
-        } catch(InvalidVersionSpecificationException e) {
-            System.out.println("VersionRange is not valid");
-            return null;
-        }
+        VersionConstraint versionConstraint =
+            getVersionConstraint(artifact.versionConstraint);
         //get versions in constraint
         for(RelativePath p : FileCommands.listFiles(artifactPath)) {
-            if(p.getFile().isDirectory()) {
-                try {
-                    Version version = versionScheme.parseVersion(p.getFile().getName());
-                    if(versionConstraint.containsVersion(version)) {
+            File f = p.getFile();
+            if(f.isDirectory()) {
+                    Version version = getVersion(f.getName());
+                    if(version != null
+                            && versionConstraint.containsVersion(version)) {
                         versionList.add(version);
                     }
-                } catch(InvalidVersionSpecificationException e) {
-                }
             }
         }
         //sort versions
@@ -153,11 +145,31 @@ public class MavenHandler {
         return versionList.get(indexOfLastElement).toString();
     }
 
+    private VersionConstraint getVersionConstraint(String versionConstraint) {
+        try {
+            VersionScheme versionScheme = new GenericVersionScheme();
+            return versionScheme.parseVersionConstraint(versionConstraint);
+        } catch(InvalidVersionSpecificationException e) {
+            System.out.println("VersionRange is not valid");
+            return null;
+        }
+    }
+
+    private Version getVersion(String version) {
+        try {
+            VersionScheme versionScheme = new GenericVersionScheme();
+            return versionScheme.parseVersion(version);
+        } catch(InvalidVersionSpecificationException e) {
+            return null;
+        }
+    }
+
 
     private List<String> getPossibleVersionOfRange(
             Artifact artifact,
             List<RemoteRepository> repos) throws VersionRangeResolutionException {
-        DefaultArtifact aetherArtifact = new DefaultArtifact(artifact.groupID,
+        DefaultArtifact aetherArtifact = new DefaultArtifact(
+                artifact.groupID,
                 artifact.artifactID,
                 artifact.classifier,
                 artifact.extension,
@@ -165,7 +177,8 @@ public class MavenHandler {
         VersionRangeRequest request = new VersionRangeRequest();
         request.setArtifact(aetherArtifact);
         request.setRepositories(repos);
-        VersionRangeResult result = system.resolveVersionRange(this.session, request);
+        VersionRangeResult result =
+            system.resolveVersionRange(this.session, request);
         List<String> possibleVersions = new ArrayList<>();
         for(Version v : result.getVersions()) {
             possibleVersions.add(v.toString());
