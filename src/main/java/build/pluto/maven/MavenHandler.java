@@ -112,11 +112,12 @@ public class MavenHandler {
         Dependency result = new Dependency(aetherArtifact, JavaScopes.COMPILE);
         List<Exclusion> exclusions = new ArrayList<>();
         for (Artifact a : artifact.exclusions) {
-            Exclusion e = new Exclusion(a.groupID, a.artifactID, a.classifier, a.extension);
+            Exclusion e =
+                new Exclusion(a.groupID, a.artifactID, a.classifier, a.extension);
             exclusions.add(e);
         }
-        result.setExclusions(exclusions);
-        result.setOptional(artifact.optional);
+        result = result.setExclusions(exclusions);
+        result = result.setOptional(artifact.optional);
         //TODO:scope?
         return result;
     }

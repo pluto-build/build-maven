@@ -24,8 +24,64 @@ public class MavenHandlerTest {
                 "4.1.1.4",
                 null,
                 null);
-        List<File> jarLocations = handler.resolveDependencies(artifact);
+        List<File> jarLocations = handler.resolveDependency(artifact);
         assertEquals(9, jarLocations.size());
+    }
+
+    @Test
+    public void testResolveDependencies() throws Exception {
+        File localRepo = new File("test10");
+        MavenHandler handler = new MavenHandler(localRepo);
+        Artifact artifact1 = new Artifact(
+                "com.google.android",
+                "android",
+                "4.1.1.4",
+                null,
+                null);
+        Artifact artifact2 = new Artifact(
+                "org.eclipse.jgit",
+                "org.eclipse.jgit",
+                "4.0.1.201506240215-r",
+                null,
+                null);
+        List<File> jarLocations =
+            handler.resolveDependencies(Arrays.asList(artifact1, artifact2));
+        assertEquals(13, jarLocations.size());
+    }
+
+    @Test
+    public void testResolveDependencyExclusion() throws Exception {
+        File localRepo = new File("test11");
+        MavenHandler handler = new MavenHandler(localRepo);
+        Artifact exclusion = new Artifact(
+                "org.json",
+                "json",
+                null,
+                "*",
+                "*");
+        Artifact artifact = new Artifact(
+                "com.google.android",
+                "android",
+                "4.1.1.4",
+                null,
+                null,
+                Arrays.asList(exclusion),
+                true);
+        List<File> jarLocations = handler.resolveDependency(artifact);
+        File jsonLocation =
+            new File(localRepo, "org/json/json/20080701/json-20080701.jar");
+        assertFalse(containsArtifact(jsonLocation, jarLocations));
+    }
+
+    private boolean containsArtifact(
+            File artifactLocation,
+            List<File> artifactList) {
+        List<String> artifactLocationStringList = new ArrayList<>();
+        for(File f : artifactList) {
+            artifactLocationStringList.add(f.getAbsolutePath());
+        }
+        String artifactLocationString = artifactLocation.getAbsolutePath();
+        return artifactLocationStringList.contains(artifactLocationString);
     }
 
     @Test
