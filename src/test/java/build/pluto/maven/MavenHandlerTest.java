@@ -2,17 +2,20 @@ package build.pluto.maven;
 
 import build.pluto.maven.Artifact;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 public class MavenHandlerTest {
 
     @Test
-    public void testResolveDependencies() throws Exception {
+    public void testResolveDependency() throws Exception {
         File localRepo = new File("test");
         MavenHandler handler = new MavenHandler(localRepo);
         Artifact artifact = new Artifact(
