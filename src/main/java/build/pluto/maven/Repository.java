@@ -13,6 +13,10 @@ public class Repository {
 
     public class Policy {
         public final boolean enabled;
+        // this field gets covered by the checkConsistencyInterval in
+        // RemoteRequirement, therefore everytime the dependencies get
+        // resolved it needs to be checked.
+        public final String updatePolicy = RepositoryPolicy.UPDATE_POLICY_ALWAYS;
         public final String checksumPolicy;
 
         /**
