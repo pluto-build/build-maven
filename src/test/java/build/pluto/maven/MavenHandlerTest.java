@@ -24,7 +24,8 @@ public class MavenHandlerTest {
                 "4.1.1.4",
                 null,
                 null);
-        List<File> jarLocations = handler.resolveDependency(artifact);
+        List<File> jarLocations =
+            handler.resolveDependencies(Arrays.asList(artifact), Arrays.asList());
         assertEquals(9, jarLocations.size());
     }
 
@@ -45,7 +46,9 @@ public class MavenHandlerTest {
                 null,
                 null);
         List<File> jarLocations =
-            handler.resolveDependencies(Arrays.asList(artifact1, artifact2));
+            handler.resolveDependencies(
+                    Arrays.asList(artifact1, artifact2),
+                    Arrays.asList());
         assertEquals(13, jarLocations.size());
     }
 
@@ -67,7 +70,8 @@ public class MavenHandlerTest {
                 null,
                 Arrays.asList(exclusion),
                 true);
-        List<File> jarLocations = handler.resolveDependency(artifact);
+        List<File> jarLocations =
+            handler.resolveDependencies(Arrays.asList(artifact), Arrays.asList());
         File jsonLocation =
             new File(localRepo, "org/json/json/20080701/json-20080701.jar");
         assertFalse(containsArtifact(jsonLocation, jarLocations));
@@ -87,16 +91,20 @@ public class MavenHandlerTest {
     @Test
     public void testResolveDependenciesOnOtherRepo() throws Exception {
         File localRepo = new File("test2");
-        MavenHandler handler = new MavenHandler(
-                localRepo,
-                null,
-                "default",
+        MavenHandler handler = new MavenHandler(localRepo);
+        Repository repo = new Repository(
+                "pluto-build",
                 "https://raw.githubusercontent.com/pluto-build/"
-                + "pluto-build.github.io/master/mvnrepository/");
+                + "pluto-build.github.io/master/mvnrepository/",
+                "",
+                "default",
+                null,
+                null);
         Artifact artifact =
             new Artifact("build.pluto", "pluto", "[0,)", null, null);
-        String version =  handler.getHighestRemoteVersion(artifact);
-        assertEquals("1.4.0-SNAPSHOT", version);
+        List<File> jarLocations =
+            handler.resolveDependencies(Arrays.asList(artifact), Arrays.asList(repo));
+        assertEquals(7, jarLocations.size());
     }
 
     @Test
@@ -105,7 +113,8 @@ public class MavenHandlerTest {
         MavenHandler handler = new MavenHandler(localRepo);
         Artifact artifact =
             new Artifact("com.google.android", "android", "[0,)", null, null);
-        String newestVersion = handler.getHighestRemoteVersion(artifact);
+        String newestVersion =
+            handler.getHighestRemoteVersion(artifact, Arrays.asList());
         assertEquals("4.1.1.4", newestVersion);
     }
 
@@ -139,7 +148,8 @@ public class MavenHandlerTest {
         MavenHandler handler = new MavenHandler(localRepo);
         Artifact artifact =
             new Artifact("com.google.android", "android", "(,4.1.1.4)", null, null);
-        String newestVersion = handler.getHighestRemoteVersion(artifact);
+        String newestVersion =
+            handler.getHighestRemoteVersion(artifact, Arrays.asList());
         assertEquals("4.0.1.2", newestVersion);
     }
 
@@ -149,7 +159,8 @@ public class MavenHandlerTest {
         MavenHandler handler = new MavenHandler(localRepo);
         Artifact artifact =
             new Artifact("com.google.android", "android", "(4.1.1.4,)", null, null);
-        String newestVersion = handler.getHighestRemoteVersion(artifact);
+        String newestVersion =
+            handler.getHighestRemoteVersion(artifact, Arrays.asList());
         assertEquals(null, newestVersion);
     }
 
@@ -159,7 +170,8 @@ public class MavenHandlerTest {
         MavenHandler handler = new MavenHandler(localRepo);
         Artifact artifact =
             new Artifact("com.google.android", "android", "[1.5_r0]", null, null);
-        String newestVersion = handler.getHighestRemoteVersion(artifact);
+        String newestVersion =
+            handler.getHighestRemoteVersion(artifact, Arrays.asList());
         assertEquals(null, newestVersion);
     }
 }
