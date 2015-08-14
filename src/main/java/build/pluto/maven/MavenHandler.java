@@ -14,6 +14,7 @@ import org.eclipse.aether.graph.Exclusion;
 import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.repository.RepositoryPolicy;
 import org.eclipse.aether.resolution.*;
 import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 import org.eclipse.aether.spi.connector.transport.TransporterFactory;
@@ -84,7 +85,6 @@ public class MavenHandler {
     }
 
     public List<File> resolveDependencies(
-            List<Artifact> artifacts) throws DependencyResolutionException {
             List<Artifact> artifacts,
             List<Repository> repos) throws DependencyResolutionException {
         CollectRequest collectRequest = new CollectRequest();
@@ -92,6 +92,9 @@ public class MavenHandler {
             collectRequest.addDependency(createDependency(a));
         }
         collectRequest.addRepository(remote);
+        for(Repository r: repos) {
+            collectRequest.addRepository(createRemoteRepository(r));
+        }
         DependencyRequest dependencyRequest = new DependencyRequest();
         dependencyRequest.setCollectRequest(collectRequest);
         List<ArtifactResult>  artifactResultList =
@@ -138,7 +141,6 @@ public class MavenHandler {
     }
 
     public String getHighestRemoteVersion(
-            Artifact artifact) throws VersionRangeResolutionException {
             Artifact artifact,
             List<Repository> repos) throws VersionRangeResolutionException {
         List<RemoteRepository> reposWithRemote = Arrays.asList(this.remote);
@@ -150,11 +152,26 @@ public class MavenHandler {
                 artifact,
                 reposWithRemote);
     }
+
     private RemoteRepository createRemoteRepository(Repository repo) {
         RemoteRepository.Builder builder =
             new RemoteRepository.Builder(repo.id, repo.layout, repo.url);
+        if(repo.snapshotPolicy != null)
+            builder =
+                builder.setSnapshotPolicy(
+                        createRepositoryPolicy(repo.snapshotPolicy));
+        if(repo.releasePolicy != null)
+            builder =
+                builder.setReleasePolicy(
+                        createRepositoryPolicy(repo.releasePolicy));
         return builder.build();
     }
+
+    private RepositoryPolicy createRepositoryPolicy(Repository.Policy policy) {
+            return new RepositoryPolicy(
+                    policy.enabled,
+                    policy.updatePolicy,
+                    policy.checksumPolicy);
     }
 
     public String getHighestLocalVersion(
