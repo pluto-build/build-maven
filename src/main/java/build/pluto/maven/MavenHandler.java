@@ -83,11 +83,6 @@ public class MavenHandler {
         return locator.getService( RepositorySystem.class );
     }
 
-    public List<File> resolveDependency(
-            Artifact artifact) throws DependencyResolutionException {
-        return resolveDependencies(Arrays.asList(artifact));
-    }
-
     public List<File> resolveDependencies(
             List<Artifact> artifacts) throws DependencyResolutionException {
         CollectRequest collectRequest = new CollectRequest();
