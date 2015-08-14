@@ -85,6 +85,8 @@ public class MavenHandler {
 
     public List<File> resolveDependencies(
             List<Artifact> artifacts) throws DependencyResolutionException {
+            List<Artifact> artifacts,
+            List<Repository> repos) throws DependencyResolutionException {
         CollectRequest collectRequest = new CollectRequest();
         for(Artifact a : artifacts) {
             collectRequest.addDependency(createDependency(a));
@@ -137,9 +139,22 @@ public class MavenHandler {
 
     public String getHighestRemoteVersion(
             Artifact artifact) throws VersionRangeResolutionException {
+            Artifact artifact,
+            List<Repository> repos) throws VersionRangeResolutionException {
+        List<RemoteRepository> reposWithRemote = Arrays.asList(this.remote);
+        for(Repository r : repos) {
+            RemoteRepository remoteRepo = createRemoteRepository(r);
+            reposWithRemote.add(remoteRepo);
+        }
         return this.getHighestVersion(
                 artifact,
-                Arrays.asList(this.remote));
+                reposWithRemote);
+    }
+    private RemoteRepository createRemoteRepository(Repository repo) {
+        RemoteRepository.Builder builder =
+            new RemoteRepository.Builder(repo.id, repo.layout, repo.url);
+        return builder.build();
+    }
     }
 
     public String getHighestLocalVersion(
