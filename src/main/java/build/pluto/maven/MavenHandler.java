@@ -178,7 +178,7 @@ public class MavenHandler {
     }
 
     public String getHighestLocalVersion(
-            Artifact artifact) throws VersionRangeResolutionException {
+            Artifact artifact) {
         String groupIDStructure = artifact.groupID.replace(".", "/");
         String artifactPathString = local.getBasedir().getAbsolutePath()
             + "/" + groupIDStructure + "/" + artifact.artifactID;
@@ -227,23 +227,27 @@ public class MavenHandler {
 
     private List<String> getPossibleVersionOfRange(
             Artifact artifact,
-            List<RemoteRepository> repos) throws VersionRangeResolutionException {
+            List<RemoteRepository> repos) {
         DefaultArtifact aetherArtifact = createDefaultArtifact(artifact);
         VersionRangeRequest request = new VersionRangeRequest();
         request.setArtifact(aetherArtifact);
         request.setRepositories(repos);
-        VersionRangeResult result =
-            system.resolveVersionRange(this.session, request);
-        List<String> possibleVersions = new ArrayList<>();
-        for(Version v : result.getVersions()) {
-            possibleVersions.add(v.toString());
+        try {
+            VersionRangeResult result =
+                system.resolveVersionRange(this.session, request);
+            List<String> possibleVersions = new ArrayList<>();
+            for(Version v : result.getVersions()) {
+                possibleVersions.add(v.toString());
+            }
+            return possibleVersions;
+        } catch (VersionRangeResolutionException e) {
+            return new ArrayList<String>();
         }
-        return possibleVersions;
     }
 
     private String getHighestVersion(
             Artifact artifact,
-            List<RemoteRepository> repos) throws VersionRangeResolutionException {
+            List<RemoteRepository> repos) {
         List<String> possibleVersions =
             this.getPossibleVersionOfRange(artifact, repos);
         int lastElementIndex = possibleVersions.size() - 1;
