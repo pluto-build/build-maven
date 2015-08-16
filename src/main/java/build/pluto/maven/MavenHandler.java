@@ -1,6 +1,7 @@
 package build.pluto.maven;
 
 import build.pluto.maven.Artifact;
+import build.pluto.maven.Dependency;
 
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
@@ -8,7 +9,6 @@ import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.artifact.DefaultArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
-import org.eclipse.aether.graph.Dependency;
 import org.eclipse.aether.graph.DependencyFilter;
 import org.eclipse.aether.graph.Exclusion;
 import org.eclipse.aether.impl.DefaultServiceLocator;
@@ -27,6 +27,7 @@ import org.eclipse.aether.version.InvalidVersionSpecificationException;
 import org.eclipse.aether.version.Version;
 import org.eclipse.aether.version.VersionConstraint;
 import org.eclipse.aether.version.VersionScheme;
+
 import org.sugarj.common.FileCommands;
 import org.sugarj.common.path.AbsolutePath;
 import org.sugarj.common.path.RelativePath;
@@ -85,11 +86,11 @@ public class MavenHandler {
     }
 
     public List<File> resolveDependencies(
-            List<Artifact> artifacts,
+            List<Dependency> dependencies,
             List<Repository> repos) throws DependencyResolutionException {
         CollectRequest collectRequest = new CollectRequest();
-        for(Artifact a : artifacts) {
-            collectRequest.addDependency(createDependency(a));
+        for(Dependency d : dependencies) {
+            collectRequest.addDependency(createDependency(d));
         }
         collectRequest.addRepository(remote);
         for(Repository r: repos) {
@@ -107,19 +108,20 @@ public class MavenHandler {
         return locationList;
     }
 
-    private Dependency createDependency(Artifact artifact) {
-        DefaultArtifact aetherArtifact = createDefaultArtifact(artifact);
+    private org.eclipse.aether.graph.Dependency createDependency(
+            Dependency dependency) {
+        DefaultArtifact aetherArtifact = createDefaultArtifact(dependency.artifact);
         List<Exclusion> exclusions = new ArrayList<>();
-        for (Artifact a : artifact.exclusions) {
+        for (Artifact a : dependency.exclusions) {
             Exclusion e =
                 new Exclusion(a.groupID, a.artifactID, a.classifier, a.extension);
             exclusions.add(e);
         }
-        //TODO:scope?
-        return new Dependency(
+        //TODO: Scope?
+        return new org.eclipse.aether.graph.Dependency(
                 aetherArtifact,
                 JavaScopes.COMPILE,
-                artifact.optional,
+                dependency.optional,
                 exclusions);
     }
 
@@ -142,8 +144,9 @@ public class MavenHandler {
 
     public String getHighestRemoteVersion(
             Artifact artifact,
-            List<Repository> repos) throws VersionRangeResolutionException {
-        List<RemoteRepository> reposWithRemote = Arrays.asList(this.remote);
+            List<Repository> repos) {
+        List<RemoteRepository> reposWithRemote = new ArrayList<>();
+        reposWithRemote.add(this.remote);
         for(Repository r : repos) {
             RemoteRepository remoteRepo = createRemoteRepository(r);
             reposWithRemote.add(remoteRepo);

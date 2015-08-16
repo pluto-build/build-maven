@@ -1,6 +1,6 @@
 package build.pluto.maven;
 
-import build.pluto.maven.Artifact;
+import build.pluto.maven.Dependency;
 
 import java.io.File;
 import java.io.Serializable;
@@ -13,7 +13,7 @@ public class MavenInput implements Serializable {
 
     public final File localRepoLocation;
 
-    public final List<Artifact> dependencyList;
+    public final List<Dependency> dependencyList;
 
     public final List<Repository> repositoryList;
 
@@ -31,7 +31,7 @@ public class MavenInput implements Serializable {
     public static class Builder {
         private File localRepoLocation;
 
-        private List<Artifact> dependencyList;
+        private List<Dependency> dependencyList;
 
         private List<Repository> repositoryList;
 
@@ -47,7 +47,7 @@ public class MavenInput implements Serializable {
          */
         public Builder (
                 File localRepoLocation,
-                List<Artifact> dependencyList,
+                List<Dependency> dependencyList,
                 File summaryLocation) {
             this.localRepoLocation = localRepoLocation;
             this.dependencyList = dependencyList;

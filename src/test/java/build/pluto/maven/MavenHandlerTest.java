@@ -1,6 +1,7 @@
 package build.pluto.maven;
 
 import build.pluto.maven.Artifact;
+import build.pluto.maven.Dependency;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,8 +25,9 @@ public class MavenHandlerTest {
                 "4.1.1.4",
                 null,
                 null);
+        Dependency dependency = new Dependency(artifact);
         List<File> jarLocations =
-            handler.resolveDependencies(Arrays.asList(artifact), Arrays.asList());
+            handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList());
         assertEquals(9, jarLocations.size());
     }
 
@@ -39,15 +41,17 @@ public class MavenHandlerTest {
                 "4.1.1.4",
                 null,
                 null);
+        Dependency dependency1 = new Dependency(artifact1);
         Artifact artifact2 = new Artifact(
                 "org.eclipse.jgit",
                 "org.eclipse.jgit",
                 "4.0.1.201506240215-r",
                 null,
                 null);
+        Dependency dependency2 = new Dependency(artifact2);
         List<File> jarLocations =
             handler.resolveDependencies(
-                    Arrays.asList(artifact1, artifact2),
+                    Arrays.asList(dependency1, dependency2),
                     Arrays.asList());
         assertEquals(13, jarLocations.size());
     }
@@ -67,11 +71,11 @@ public class MavenHandlerTest {
                 "android",
                 "4.1.1.4",
                 null,
-                null,
-                Arrays.asList(exclusion),
-                true);
+                null);
+        Dependency dependency =
+            new Dependency(artifact, Arrays.asList(exclusion), false);
         List<File> jarLocations =
-            handler.resolveDependencies(Arrays.asList(artifact), Arrays.asList());
+            handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList());
         File jsonLocation =
             new File(localRepo, "org/json/json/20080701/json-20080701.jar");
         assertFalse(containsArtifact(jsonLocation, jarLocations));
@@ -102,8 +106,9 @@ public class MavenHandlerTest {
                 null);
         Artifact artifact =
             new Artifact("build.pluto", "pluto", "[0,)", null, null);
+        Dependency dependency = new Dependency(artifact);
         List<File> jarLocations =
-            handler.resolveDependencies(Arrays.asList(artifact), Arrays.asList(repo));
+            handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList(repo));
         assertEquals(7, jarLocations.size());
     }
 
