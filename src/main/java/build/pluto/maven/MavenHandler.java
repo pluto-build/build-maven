@@ -5,8 +5,11 @@ import build.pluto.maven.Dependency;
 
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
+import org.eclipse.aether.deployment.DeployRequest;
+import org.eclipse.aether.deployment.DeploymentException;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.util.artifact.SubArtifact;
 import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.graph.DependencyFilter;
@@ -179,9 +182,8 @@ public class MavenHandler {
 
     public String getHighestLocalVersion(
             Artifact artifact) {
-        String groupIDStructure = artifact.groupID.replace(".", "/");
         String artifactPathString = local.getBasedir().getAbsolutePath()
-            + "/" + groupIDStructure + "/" + artifact.artifactID;
+            + getPathToArtifactFolder(artifact);
         AbsolutePath artifactPath = new AbsolutePath(artifactPathString);
         List<Version> versionList = new ArrayList<>();
         VersionConstraint versionConstraint =
@@ -204,6 +206,14 @@ public class MavenHandler {
             return null;
         }
         return versionList.get(indexOfLastElement).toString();
+    }
+
+    public static String getPathToArtifactFolder(
+            Artifact artifact) {
+        String groupIDStructure = artifact.groupID.replace(".", "/");
+        String artifactPathString =
+            "/" + groupIDStructure + "/" + artifact.artifactID;
+        return artifactPathString;
     }
 
     private VersionConstraint getVersionConstraint(String versionConstraint) {
@@ -255,5 +265,25 @@ public class MavenHandler {
             return null;
         }
         return possibleVersions.get(lastElementIndex);
+    }
+
+    public void deployArtifact(
+            Artifact artifact,
+            File typeLocation,
+            File pomLocation,
+            Repository repo) throws DeploymentException {
+        org.eclipse.aether.artifact.Artifact typeArtifact =
+            this.createDefaultArtifact(artifact);
+        typeArtifact = typeArtifact.setFile(typeLocation);
+        org.eclipse.aether.artifact.Artifact pomArtifact =
+            new SubArtifact(typeArtifact, "", "pom");
+        pomArtifact = pomArtifact.setFile(pomLocation);
+
+        DeployRequest deployRequest = new DeployRequest();
+        deployRequest = deployRequest
+            .addArtifact(typeArtifact)
+            .addArtifact(pomArtifact);
+        deployRequest = deployRequest.setRepository(createRemoteRepository(repo));
+        system.deploy(session, deployRequest);
     }
 }
