@@ -105,7 +105,7 @@ public class MavenHandlerTest {
                 null,
                 null);
         Artifact artifact =
-            new Artifact("build.pluto", "pluto", "[0,)", null, null);
+            new Artifact("build.pluto", "pluto", "1.4.0-SNAPSHOT", null, null);
         Dependency dependency = new Dependency(artifact);
         List<File> jarLocations =
             handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList(repo));
