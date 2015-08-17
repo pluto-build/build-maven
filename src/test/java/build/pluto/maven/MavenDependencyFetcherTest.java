@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import org.sugarj.common.FileCommands;
 
@@ -103,7 +104,9 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
             File repoLocation = new File(repoURI);
             FileCommands.delete(repoLocation);
         } catch(IOException e) {
+            fail("Could not delete repo");
         } catch(URISyntaxException e) {
+            fail("Path to repo is not valid");
         }
     }
 
