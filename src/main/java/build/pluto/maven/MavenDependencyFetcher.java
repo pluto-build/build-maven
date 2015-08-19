@@ -1,6 +1,6 @@
 package build.pluto.maven;
 
-import build.pluto.builder.Builder;
+import build.pluto.builder.RemoteAccessBuilder;
 import build.pluto.builder.BuildManager;
 import build.pluto.builder.BuilderFactory;
 import build.pluto.maven.Artifact;
@@ -15,7 +15,7 @@ import java.util.List;
 
 import org.sugarj.common.FileCommands;
 
-public class MavenDependencyFetcher extends Builder<MavenInput, None> {
+public class MavenDependencyFetcher extends RemoteAccessBuilder<MavenInput, None> {
 
     public static BuilderFactory<MavenInput, None, MavenDependencyFetcher> factory
         = BuilderFactory.of(MavenDependencyFetcher.class, MavenInput.class);
@@ -24,10 +24,12 @@ public class MavenDependencyFetcher extends Builder<MavenInput, None> {
         super(input);
     }
 
+    @Override
     protected String description(MavenInput input) {
         return "Gets an Artifact from defined Maven repositories and Central.";
     }
 
+    @Override
     protected File persistentPath(MavenInput input) {
         if(input.summaryLocation != null) {
             return new File(input.summaryLocation, "maven.dep");
@@ -35,9 +37,19 @@ public class MavenDependencyFetcher extends Builder<MavenInput, None> {
         return new File("./maven.dep");
     }
 
-    protected None build(MavenInput input) throws Throwable {
-        String tsFileName = "maven.ts";
-        File timeStampPersistentPath = new File(input.summaryLocation, tsFileName);
+    @Override
+    protected File timestampPersistentPath(MavenInput input) {
+        if(input.summaryLocation != null) {
+            return new File(input.summaryLocation, "maven.ts");
+        }
+        return new File("./maven.ts");
+    }
+
+    @Override
+    protected None build(MavenInput input, File tsPersistentPath) throws Throwable {
+        if(!input.isValid()) {
+            throw new IllegalArgumentException("MavenInput was not correctly build");
+        }
         List<Artifact> artifactList = new ArrayList<>();
         for (Dependency d : input.dependencyList) {
             artifactList.add(d.artifact);
@@ -46,18 +58,12 @@ public class MavenDependencyFetcher extends Builder<MavenInput, None> {
                 input.localRepoLocation,
                 input.repositoryList,
                 artifactList,
-                timeStampPersistentPath,
+                tsPersistentPath,
                 input.consistencyCheckInterval);
         this.requireOther(mavenRequirement);
         MavenHandler handler = new MavenHandler(input.localRepoLocation);
         List<File> artifactLocations =
             handler.resolveDependencies(input.dependencyList, input.repositoryList);
-
-        //Write timestamp to file
-        Thread currentThread = Thread.currentThread();
-        long currentTime = BuildManager.requireInitiallyTimeStamps.get(currentThread);
-        FileCommands.createFile(timeStampPersistentPath);
-        FileCommands.writeToFile(timeStampPersistentPath, String.valueOf(currentTime));
 
         for(File f : artifactLocations) {
             this.provide(f);

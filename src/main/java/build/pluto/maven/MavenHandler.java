@@ -286,4 +286,16 @@ public class MavenHandler {
         deployRequest = deployRequest.setRepository(createRemoteRepository(repo));
         system.deploy(session, deployRequest);
     }
+
+    public boolean isAnyArtifactAvailable(
+            Artifact artifact,
+            List<Repository> repos) {
+        List<RemoteRepository> remoteRepoList = new ArrayList<>();
+        for(Repository r : repos) {
+            remoteRepoList.add(createRemoteRepository(r));
+        }
+        List<String> versions =
+            this.getPossibleVersionOfRange(artifact, remoteRepoList);
+        return !versions.isEmpty();
+    }
 }

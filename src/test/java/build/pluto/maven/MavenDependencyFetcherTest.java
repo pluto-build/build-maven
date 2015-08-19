@@ -2,6 +2,7 @@ package build.pluto.maven;
 
 import build.pluto.builder.BuildManagers;
 import build.pluto.builder.BuildRequest;
+import build.pluto.builder.RequiredBuilderFailed;
 import build.pluto.maven.Artifact;
 import build.pluto.maven.Dependency;
 import build.pluto.maven.MavenDependencyFetcher;
@@ -235,5 +236,20 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
         assertEquals("2.0", currentVersion1);
         assertEquals("1.0", currentVersion2);
         deleteRepo(repoList.get(0));
+    }
+
+    @Test(expected = RequiredBuilderFailed.class)
+    public void testSingleExecutionWithWrongArtifact() throws Exception {
+        Artifact artifact = new Artifact(
+                "build.pluto",
+                "dummy-maven",
+                "1.0",
+                null,
+                null);
+        deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
+        artifact = changeVersionConstraint(artifact, "[2.0,)");
+        Dependency dependency = new Dependency(artifact);
+        dependencyList.add(dependency);
+        build();
     }
 }
