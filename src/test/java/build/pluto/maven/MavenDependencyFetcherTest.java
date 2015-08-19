@@ -61,7 +61,7 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
                 "1.0",
                 null,
                 null);
-        deployArtifact(artifact, "pom.xml", repoList.get(0));
+        deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         Dependency dependency = new Dependency(artifact);
         dependencyList.add(dependency);
         build();
@@ -72,10 +72,11 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
 
     private void deployArtifact(
             Artifact artifact,
+            String jarPath,
             String pomPath,
             Repository repo) throws Exception {
         File dummyMaven = new File("src/test/resources/dummy-maven");
-        File jarLocation = new File(dummyMaven, "dummy-maven.jar");
+        File jarLocation = new File(dummyMaven, jarPath);
         File pomLocation = new File(dummyMaven, pomPath);
         handler.deployArtifact(
                 artifact,
@@ -118,7 +119,7 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
                 "1.0",
                 null,
                 null);
-        deployArtifact(artifact, "pom.xml", repoList.get(0));
+        deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         Dependency dependency = new Dependency(artifact);
         dependencyList.add(dependency);
         build();
@@ -136,13 +137,13 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
                 "1.0",
                 null,
                 null);
-        deployArtifact(artifact, "pom.xml", repoList.get(0));
+        deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifact = changeVersionConstraint(artifact, "[1.0,)");
         Dependency dependency = new Dependency(artifact);
         dependencyList.add(dependency);
         build();
         Artifact newArtifact = changeVersionConstraint(artifact, "2.0");
-        deployArtifact(newArtifact, "pom2.xml", repoList.get(0));
+        deployArtifact(newArtifact, "dummy-maven.jar", "pom2.xml", repoList.get(0));
         build();
         String currentVersion = handler.getHighestLocalVersion(artifact);
         assertEquals("2.0", currentVersion);
@@ -169,13 +170,13 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
                 "1.0",
                 null,
                 null);
-        deployArtifact(artifact, "pom.xml", repoList.get(0));
+        deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifact = changeVersionConstraint(artifact, "[0.0,2.0)");
         Dependency dependency = new Dependency(artifact);
         dependencyList.add(dependency);
         build();
         Artifact newArtifact = changeVersionConstraint(artifact, "2.0");
-        deployArtifact(newArtifact, "pom2.xml", repoList.get(0));
+        deployArtifact(newArtifact, "dummy-maven.jar", "pom2.xml", repoList.get(0));
         build();
         String currentVersion = handler.getHighestLocalVersion(artifact);
         assertEquals("1.0", currentVersion);
