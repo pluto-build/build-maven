@@ -192,11 +192,11 @@ public class MavenHandler {
         for(RelativePath p : FileCommands.listFiles(artifactPath)) {
             File f = p.getFile();
             if(f.isDirectory()) {
-                    Version version = getVersion(f.getName());
-                    if(version != null
-                            && versionConstraint.containsVersion(version)) {
-                        versionList.add(version);
-                    }
+                Version version = getVersion(f.getName());
+                if(version != null
+                        && versionConstraint.containsVersion(version)) {
+                    versionList.add(version);
+                }
             }
         }
         //sort versions
