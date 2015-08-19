@@ -192,16 +192,48 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
                 "1.0",
                 null,
                 null);
-        deployArtifact(artifact, "pom.xml", repoList.get(0));
+        deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifact = changeVersionConstraint(artifact, "[0.0,)");
         Dependency dependency = new Dependency(artifact);
         dependencyList.add(dependency);
         build();
         Artifact newArtifact = changeVersionConstraint(artifact, "2.0");
-        deployArtifact(newArtifact, "pom2.xml", repoList.get(0));
+        deployArtifact(newArtifact, "dummy-maven.jar", "pom2.xml", repoList.get(0));
         build();
         String currentVersion = handler.getHighestLocalVersion(artifact);
         assertEquals("1.0", currentVersion);
+        deleteRepo(repoList.get(0));
+    }
+
+    @Test
+    public void testDoubleExecutionTwoDependenciesWithNewVersionInRange() throws Exception {
+        Artifact artifact1 = new Artifact(
+                "build.pluto",
+                "dummy-maven",
+                "1.0",
+                null,
+                null);
+        deployArtifact(artifact1, "dummy-maven.jar", "pom.xml", repoList.get(0));
+        Artifact artifact2 = new Artifact(
+                "build.pluto",
+                "dummy-maven2",
+                "1.0",
+                null,
+                null);
+        deployArtifact(artifact2, "dummy-maven.jar", "pom3.xml", repoList.get(0));
+        artifact1 = changeVersionConstraint(artifact1, "[0.0,)");
+        Dependency dependency1 = new Dependency(artifact1);
+        Dependency dependency2 = new Dependency(artifact2);
+        dependencyList.add(dependency1);
+        dependencyList.add(dependency2);
+        build();
+        Artifact newArtifact1 = changeVersionConstraint(artifact1, "2.0");
+        deployArtifact(newArtifact1, "dummy-maven.jar", "pom2.xml", repoList.get(0));
+        build();
+        String currentVersion1 = handler.getHighestLocalVersion(artifact1);
+        String currentVersion2 = handler.getHighestLocalVersion(artifact2);
+        assertEquals("2.0", currentVersion1);
+        assertEquals("1.0", currentVersion2);
         deleteRepo(repoList.get(0));
     }
 }
