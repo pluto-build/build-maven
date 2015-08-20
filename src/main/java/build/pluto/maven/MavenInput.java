@@ -26,16 +26,6 @@ public class MavenInput implements Serializable {
         this.consistencyCheckInterval = builder.consistencyCheckInterval;
     }
 
-    public boolean isValid() {
-        MavenHandler handler = new MavenHandler(localRepoLocation);
-        for(Dependency d : dependencyList) {
-            if(!handler.isAnyArtifactAvailable(d.artifact, repositoryList)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public static class Builder {
         private File localRepoLocation;
 

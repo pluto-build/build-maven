@@ -1,7 +1,7 @@
 package build.pluto.maven;
 
 import build.pluto.builder.BuilderFactory;
-import build.pluto.builder.RemoteAccessBuilder;
+import build.pluto.builder.Builder;
 import build.pluto.maven.dependency.MavenRemoteRequirement;
 import build.pluto.output.None;
 
@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MavenDependencyFetcher extends RemoteAccessBuilder<MavenInput, None> {
+public class MavenDependencyFetcher extends Builder<MavenInput, None> {
 
     public static BuilderFactory<MavenInput, None, MavenDependencyFetcher> factory
         = BuilderFactory.of(MavenDependencyFetcher.class, MavenInput.class);
@@ -32,18 +32,11 @@ public class MavenDependencyFetcher extends RemoteAccessBuilder<MavenInput, None
     }
 
     @Override
-    protected File timestampPersistentPath(MavenInput input) {
-        if(input.summaryLocation != null) {
-            return new File(input.summaryLocation, "maven.ts");
-        }
-        return new File("./maven.ts");
-    }
-
-    @Override
-    protected None build(MavenInput input, File tsPersistentPath) throws Throwable {
-        if(!input.isValid()) {
+    protected None build(MavenInput input) throws Throwable {
+        if(!isInputValid(input)) {
             throw new IllegalArgumentException("The given dependencies could not be resolved");
         }
+        File tsPersistentPath = new File(input.summaryLocation, "maven.dep.time");
         List<Artifact> artifactList = new ArrayList<>();
         for (Dependency d : input.dependencyList) {
             artifactList.add(d.artifact);
@@ -63,5 +56,15 @@ public class MavenDependencyFetcher extends RemoteAccessBuilder<MavenInput, None
             this.provide(f);
         }
         return None.val;
+    }
+
+    private boolean isInputValid(MavenInput input) {
+        MavenHandler handler = new MavenHandler(input.localRepoLocation);
+        for(Dependency d : input.dependencyList) {
+            if(!handler.isAnyArtifactAvailable(d.artifact, input.repositoryList)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
