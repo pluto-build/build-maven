@@ -48,7 +48,7 @@ public class MavenDependencyFetcher extends RemoteAccessBuilder<MavenInput, None
     @Override
     protected None build(MavenInput input, File tsPersistentPath) throws Throwable {
         if(!input.isValid()) {
-            throw new IllegalArgumentException("MavenInput was not correctly build");
+            throw new IllegalArgumentException("The given dependencies could not be resolved");
         }
         List<Artifact> artifactList = new ArrayList<>();
         for (Dependency d : input.dependencyList) {
