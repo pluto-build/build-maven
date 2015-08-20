@@ -2,15 +2,15 @@ package build.pluto.maven.dependency;
 
 import build.pluto.builder.BuildUnitProvider;
 import build.pluto.dependency.RemoteRequirement;
-import build.pluto.maven.MavenHandler;
 import build.pluto.maven.Artifact;
+import build.pluto.maven.MavenHandler;
 import build.pluto.maven.Repository;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.List;
+import java.util.Map;
 
 public class MavenRemoteRequirement extends RemoteRequirement {
     private File localRepoLocation;

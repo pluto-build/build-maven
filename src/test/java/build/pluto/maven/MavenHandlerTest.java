@@ -1,13 +1,10 @@
 package build.pluto.maven;
 
-import build.pluto.maven.Artifact;
-import build.pluto.maven.Dependency;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 import org.junit.Test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;

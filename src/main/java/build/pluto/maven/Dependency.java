@@ -1,7 +1,5 @@
 package build.pluto.maven;
 
-import build.pluto.maven.Artifact;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

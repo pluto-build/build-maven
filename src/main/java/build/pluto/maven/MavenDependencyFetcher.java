@@ -1,19 +1,13 @@
 package build.pluto.maven;
 
-import build.pluto.builder.RemoteAccessBuilder;
-import build.pluto.builder.BuildManager;
 import build.pluto.builder.BuilderFactory;
-import build.pluto.maven.Artifact;
-import build.pluto.maven.Dependency;
+import build.pluto.builder.RemoteAccessBuilder;
 import build.pluto.maven.dependency.MavenRemoteRequirement;
-import build.pluto.maven.MavenInput;
 import build.pluto.output.None;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.sugarj.common.FileCommands;
 
 public class MavenDependencyFetcher extends RemoteAccessBuilder<MavenInput, None> {
 

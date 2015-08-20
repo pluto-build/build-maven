@@ -1,8 +1,8 @@
 package build.pluto.maven;
 
-import java.io.Serializable;
-
 import org.eclipse.aether.repository.RepositoryPolicy;
+
+import java.io.Serializable;
 
 public class Repository implements Serializable {
 

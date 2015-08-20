@@ -3,15 +3,11 @@ package build.pluto.maven;
 import build.pluto.builder.BuildManagers;
 import build.pluto.builder.BuildRequest;
 import build.pluto.builder.RequiredBuilderFailed;
-import build.pluto.maven.Artifact;
-import build.pluto.maven.Dependency;
-import build.pluto.maven.MavenDependencyFetcher;
-import build.pluto.maven.MavenInput;
-import build.pluto.maven.MavenHandler;
-import build.pluto.maven.Repository;
-
 import build.pluto.test.build.ScopedBuildTest;
 import build.pluto.test.build.ScopedPath;
+import org.junit.Before;
+import org.junit.Test;
+import org.sugarj.common.FileCommands;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,14 +17,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
-
-import org.sugarj.common.FileCommands;
 
 public class MavenDependencyFetcherTest extends ScopedBuildTest {
     @ScopedPath("")
