@@ -70,7 +70,7 @@ public class MavenHandlerTest {
                 null,
                 null);
         Dependency dependency =
-            new Dependency(artifact, Arrays.asList(exclusion), false);
+            new Dependency(artifact, Arrays.asList(exclusion));
         List<File> jarLocations =
             handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList());
         File jsonLocation =

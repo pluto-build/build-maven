@@ -117,7 +117,7 @@ public class MavenHandler {
         return new org.eclipse.aether.graph.Dependency(
                 aetherArtifact,
                 JavaScopes.COMPILE,
-                dependency.optional,
+                false,
                 exclusions);
     }
 
