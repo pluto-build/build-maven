@@ -16,13 +16,11 @@ public class MavenInput implements Serializable {
     public final List<Repository> repositoryList;
 
     public final long consistencyCheckInterval;
-    public final File summaryLocation;
 
     private MavenInput(Builder builder) {
         this.localRepoLocation = builder.localRepoLocation;
         this.dependencyList = builder.dependencyList;
         this.repositoryList = builder.repositoryList;
-        this.summaryLocation = builder.summaryLocation;
         this.consistencyCheckInterval = builder.consistencyCheckInterval;
     }
 
@@ -34,7 +32,6 @@ public class MavenInput implements Serializable {
         private List<Repository> repositoryList;
 
         private long consistencyCheckInterval = 0;
-        private File summaryLocation;
 
         /**
          * @param localRepoLocation where the artifacts that are downloaded
@@ -45,12 +42,10 @@ public class MavenInput implements Serializable {
          */
         public Builder (
                 File localRepoLocation,
-                List<Dependency> dependencyList,
-                File summaryLocation) {
+                List<Dependency> dependencyList) {
             this.localRepoLocation = localRepoLocation;
             this.dependencyList = dependencyList;
             this.repositoryList = new ArrayList<>();
-            this.summaryLocation = summaryLocation;
         }
 
         /**

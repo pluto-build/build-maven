@@ -25,10 +25,7 @@ public class MavenDependencyFetcher extends Builder<MavenInput, None> {
 
     @Override
     protected File persistentPath(MavenInput input) {
-        if(input.summaryLocation != null) {
-            return new File(input.summaryLocation, "maven.dep");
-        }
-        return new File("./maven.dep");
+        return new File(input.localRepoLocation, "maven.dep");
     }
 
     @Override
@@ -36,7 +33,7 @@ public class MavenDependencyFetcher extends Builder<MavenInput, None> {
         if(!isInputValid(input)) {
             throw new IllegalArgumentException("The given dependencies could not be resolved");
         }
-        File tsPersistentPath = new File(input.summaryLocation, "maven.dep.time");
+        File tsPersistentPath = new File(input.localRepoLocation, "maven.dep.time");
         List<Artifact> artifactList = new ArrayList<>();
         for (Dependency d : input.dependencyList) {
             artifactList.add(d.artifact);

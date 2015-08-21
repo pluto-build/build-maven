@@ -77,11 +77,9 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
     }
 
     private void build() throws IOException {
-        File summaryLocation = new File(localRepoLocation, "temp");
         MavenInput.Builder inputBuilder = new MavenInput.Builder(
                 localRepoLocation,
-                dependencyList,
-                summaryLocation);
+                dependencyList);
         inputBuilder.setConsistencyCheckInterval(consistencyCheckInterval);
         inputBuilder.setRepositoryList(this.repoList);
         MavenInput input = inputBuilder.build();
