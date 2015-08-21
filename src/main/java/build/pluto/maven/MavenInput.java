@@ -34,11 +34,9 @@ public class MavenInput implements Serializable {
         private long consistencyCheckInterval = 0;
 
         /**
-         * @param localRepoLocation where the artifacts that are downloaded
+         * @param localRepoLocation where the artifacts that get downloaded
          * are saved
-         * @param dependencyList the artifacts that you want to get resolved
-         * @param summaryLocation where the summary of the builder that uses
-         * this Input is located
+         * @param dependencyList the dependencies that you want to get resolved
          */
         public Builder (
                 File localRepoLocation,
