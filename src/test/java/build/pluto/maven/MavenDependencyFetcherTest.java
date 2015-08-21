@@ -46,17 +46,18 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
 
     @Test
     public void testSingleSimpleExecution() throws Exception {
-        Artifact artifact = new Artifact(
+        ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
                 "1.0",
                 null,
                 null);
+        Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        Dependency dependency = new Dependency(artifact);
+        Dependency dependency = new Dependency(artifactConstraint);
         dependencyList.add(dependency);
         build();
-        String currentVersion = handler.getHighestLocalVersion(artifact);
+        String currentVersion = handler.getHighestLocalVersion(artifactConstraint);
         assertEquals("1.0", currentVersion);
         deleteRepo(repoList.get(0));
     }
@@ -102,125 +103,135 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
 
     @Test
     public void testDoubleExecutionWithoutNewVersion() throws Exception {
-        Artifact artifact = new Artifact(
+        ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
                 "1.0",
                 null,
                 null);
+        Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        Dependency dependency = new Dependency(artifact);
+        Dependency dependency = new Dependency(artifactConstraint);
         dependencyList.add(dependency);
         build();
         build();
-        String currentVersion = handler.getHighestLocalVersion(artifact);
+        String currentVersion = handler.getHighestLocalVersion(artifactConstraint);
         assertEquals("1.0", currentVersion);
         deleteRepo(repoList.get(0));
     }
 
     @Test
     public void testDoubleExecutionWithNewVersionInRange() throws Exception {
-        Artifact artifact = new Artifact(
+        ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
                 "1.0",
                 null,
                 null);
+        Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        artifact = changeVersionConstraint(artifact, "[1.0,)");
-        Dependency dependency = new Dependency(artifact);
+        artifactConstraint = changeVersionConstraint(artifactConstraint, "[1.0,)");
+        Dependency dependency = new Dependency(artifactConstraint);
         dependencyList.add(dependency);
         build();
-        Artifact newArtifact = changeVersionConstraint(artifact, "2.0");
+        ArtifactConstraint newArtifactConstraint = changeVersionConstraint(artifactConstraint, "2.0");
+        Artifact newArtifact = MavenHandler.transformToArtifact(newArtifactConstraint);
         deployArtifact(newArtifact, "dummy-maven.jar", "pom2.xml", repoList.get(0));
         build();
-        String currentVersion = handler.getHighestLocalVersion(artifact);
+        String currentVersion = handler.getHighestLocalVersion(artifactConstraint);
         assertEquals("2.0", currentVersion);
         deleteRepo(repoList.get(0));
     }
 
-    private Artifact changeVersionConstraint(
-            Artifact artifact,
+    private ArtifactConstraint changeVersionConstraint(
+            ArtifactConstraint artifactConstraint,
             String versionConstraint) {
-        return new Artifact(
-                artifact.groupID,
-                artifact.artifactID,
+        return new ArtifactConstraint(
+                artifactConstraint.groupID,
+                artifactConstraint.artifactID,
                 versionConstraint,
-                artifact.classifier,
-                artifact.extension);
+                artifactConstraint.classifier,
+                artifactConstraint.extension);
     }
 
     @Test
     public void testDoubleExecutionWithNewVersionOutsideOfRange()
             throws Exception {
-        Artifact artifact = new Artifact(
+        ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
                 "1.0",
                 null,
                 null);
+        Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        artifact = changeVersionConstraint(artifact, "[0.0,2.0)");
-        Dependency dependency = new Dependency(artifact);
+        artifactConstraint = changeVersionConstraint(artifactConstraint, "[0.0,2.0)");
+        Dependency dependency = new Dependency(artifactConstraint);
         dependencyList.add(dependency);
         build();
-        Artifact newArtifact = changeVersionConstraint(artifact, "2.0");
+        ArtifactConstraint newArtifactConstraint = changeVersionConstraint(artifactConstraint, "2.0");
+        Artifact newArtifact = MavenHandler.transformToArtifact(newArtifactConstraint);
         deployArtifact(newArtifact, "dummy-maven.jar", "pom2.xml", repoList.get(0));
         build();
-        String currentVersion = handler.getHighestLocalVersion(artifact);
+        String currentVersion = handler.getHighestLocalVersion(artifactConstraint);
         assertEquals("1.0", currentVersion);
         deleteRepo(repoList.get(0));
     }
 
     @Test
     public void testDoubleExecutionWithNewVersionButToEarly() throws Exception {
-        consistencyCheckInterval = 9000L;
-        Artifact artifact = new Artifact(
+        consistencyCheckInterval = 90000L;
+        ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
                 "1.0",
                 null,
                 null);
+        Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        artifact = changeVersionConstraint(artifact, "[0.0,)");
-        Dependency dependency = new Dependency(artifact);
+        artifactConstraint = changeVersionConstraint(artifactConstraint, "[0.0,)");
+        Dependency dependency = new Dependency(artifactConstraint);
         dependencyList.add(dependency);
         build();
-        Artifact newArtifact = changeVersionConstraint(artifact, "2.0");
+        ArtifactConstraint newArtifactConstraint = changeVersionConstraint(artifactConstraint, "2.0");
+        Artifact newArtifact = MavenHandler.transformToArtifact(newArtifactConstraint);
         deployArtifact(newArtifact, "dummy-maven.jar", "pom2.xml", repoList.get(0));
         build();
-        String currentVersion = handler.getHighestLocalVersion(artifact);
+        String currentVersion = handler.getHighestLocalVersion(artifactConstraint);
         assertEquals("1.0", currentVersion);
         deleteRepo(repoList.get(0));
     }
 
     @Test
     public void testDoubleExecutionTwoDependenciesWithNewVersionInRange() throws Exception {
-        Artifact artifact1 = new Artifact(
+        ArtifactConstraint artifactConstraint1 = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
                 "1.0",
                 null,
                 null);
+        Artifact artifact1 = MavenHandler.transformToArtifact(artifactConstraint1);
         deployArtifact(artifact1, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        Artifact artifact2 = new Artifact(
+        ArtifactConstraint artifactConstraint2 = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven2",
                 "1.0",
                 null,
                 null);
+        Artifact artifact2 = MavenHandler.transformToArtifact(artifactConstraint2);
         deployArtifact(artifact2, "dummy-maven.jar", "pom3.xml", repoList.get(0));
-        artifact1 = changeVersionConstraint(artifact1, "[0.0,)");
-        Dependency dependency1 = new Dependency(artifact1);
-        Dependency dependency2 = new Dependency(artifact2);
+        artifactConstraint1 = changeVersionConstraint(artifactConstraint1, "[0.0,)");
+        Dependency dependency1 = new Dependency(artifactConstraint1);
+        Dependency dependency2 = new Dependency(artifactConstraint2);
         dependencyList.add(dependency1);
         dependencyList.add(dependency2);
         build();
-        Artifact newArtifact1 = changeVersionConstraint(artifact1, "2.0");
+        ArtifactConstraint newArtifactConstraint1 = changeVersionConstraint(artifactConstraint1, "2.0");
+        Artifact newArtifact1 = MavenHandler.transformToArtifact(newArtifactConstraint1);
         deployArtifact(newArtifact1, "dummy-maven.jar", "pom2.xml", repoList.get(0));
         build();
-        String currentVersion1 = handler.getHighestLocalVersion(artifact1);
-        String currentVersion2 = handler.getHighestLocalVersion(artifact2);
+        String currentVersion1 = handler.getHighestLocalVersion(artifactConstraint1);
+        String currentVersion2 = handler.getHighestLocalVersion(artifactConstraint2);
         assertEquals("2.0", currentVersion1);
         assertEquals("1.0", currentVersion2);
         deleteRepo(repoList.get(0));
@@ -228,15 +239,16 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
 
     @Test(expected = RequiredBuilderFailed.class)
     public void testSingleExecutionWithWrongArtifact() throws Exception {
-        Artifact artifact = new Artifact(
+        ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
                 "1.0",
                 null,
                 null);
+        Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        artifact = changeVersionConstraint(artifact, "[2.0,)");
-        Dependency dependency = new Dependency(artifact);
+        artifactConstraint = changeVersionConstraint(artifactConstraint, "[2.0,)");
+        Dependency dependency = new Dependency(artifactConstraint);
         dependencyList.add(dependency);
         build();
     }

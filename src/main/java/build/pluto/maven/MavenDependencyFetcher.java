@@ -34,14 +34,14 @@ public class MavenDependencyFetcher extends Builder<MavenInput, None> {
             throw new IllegalArgumentException("The given dependencies could not be resolved");
         }
         File tsPersistentPath = new File(input.localRepoLocation, "maven.dep.time");
-        List<Artifact> artifactList = new ArrayList<>();
+        List<ArtifactConstraint> artifactConstraintList = new ArrayList<>();
         for (Dependency d : input.dependencyList) {
-            artifactList.add(d.artifact);
+            artifactConstraintList.add(d.artifactConstraint);
         }
         MavenRemoteRequirement mavenRequirement = new MavenRemoteRequirement(
                 input.localRepoLocation,
                 input.repositoryList,
-                artifactList,
+                artifactConstraintList,
                 tsPersistentPath,
                 input.consistencyCheckInterval);
         this.requireOther(mavenRequirement);
@@ -58,7 +58,7 @@ public class MavenDependencyFetcher extends Builder<MavenInput, None> {
     private boolean isInputValid(MavenInput input) {
         MavenHandler handler = new MavenHandler(input.localRepoLocation);
         for(Dependency d : input.dependencyList) {
-            if(!handler.isAnyArtifactAvailable(d.artifact, input.repositoryList)) {
+            if(!handler.isAnyArtifactAvailable(d.artifactConstraint, input.repositoryList)) {
                 return false;
             }
         }

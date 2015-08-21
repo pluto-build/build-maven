@@ -106,9 +106,9 @@ public class MavenHandler {
 
     private org.eclipse.aether.graph.Dependency createDependency(
             Dependency dependency) {
-        DefaultArtifact aetherArtifact = createDefaultArtifact(dependency.artifact);
+        DefaultArtifact aetherArtifact = createDefaultArtifact(dependency.artifactConstraint);
         List<Exclusion> exclusions = new ArrayList<>();
-        for (Artifact a : dependency.exclusions) {
+        for (ArtifactConstraint a : dependency.exclusions) {
             Exclusion e =
                 new Exclusion(a.groupID, a.artifactID, a.classifier, a.extension);
             exclusions.add(e);
@@ -119,6 +119,23 @@ public class MavenHandler {
                 JavaScopes.COMPILE,
                 false,
                 exclusions);
+    }
+
+    public DefaultArtifact createDefaultArtifact(ArtifactConstraint artifactConstraint) {
+        StringBuffer sb = new StringBuffer();
+        sb.append(artifactConstraint.groupID).append(":");
+        sb.append(artifactConstraint.artifactID);
+        if (artifactConstraint.extension != null) {
+            sb.append(":");
+            sb.append(artifactConstraint.extension);
+        }
+        if (artifactConstraint.classifier != null) {
+            sb.append(":");
+            sb.append(artifactConstraint.classifier);
+        }
+        sb.append(":");
+        sb.append(artifactConstraint.versionConstraint);
+        return new DefaultArtifact(sb.toString());
     }
 
     public DefaultArtifact createDefaultArtifact(Artifact artifact) {
@@ -134,12 +151,21 @@ public class MavenHandler {
             sb.append(artifact.classifier);
         }
         sb.append(":");
-        sb.append(artifact.versionConstraint);
+        sb.append(artifact.version);
         return new DefaultArtifact(sb.toString());
+    }
+    
+    public static Artifact transformToArtifact(ArtifactConstraint artifactConstraint) {
+        return new Artifact(
+                artifactConstraint.groupID,
+                artifactConstraint.artifactID,
+                artifactConstraint.versionConstraint,
+                artifactConstraint.classifier,
+                artifactConstraint.extension);
     }
 
     public String getHighestRemoteVersion(
-            Artifact artifact,
+            ArtifactConstraint artifactConstraint,
             List<Repository> repos) {
         List<RemoteRepository> reposWithRemote = new ArrayList<>();
         reposWithRemote.add(this.remote);
@@ -148,7 +174,7 @@ public class MavenHandler {
             reposWithRemote.add(remoteRepo);
         }
         return this.getHighestVersion(
-                artifact,
+                artifactConstraint,
                 reposWithRemote);
     }
 
@@ -174,13 +200,13 @@ public class MavenHandler {
     }
 
     public String getHighestLocalVersion(
-            Artifact artifact) {
+            ArtifactConstraint artifactConstraint) {
         String artifactPathString = local.getBasedir().getAbsolutePath()
-            + getPathToArtifactFolder(artifact);
+            + getPathToArtifactFolder(artifactConstraint);
         AbsolutePath artifactPath = new AbsolutePath(artifactPathString);
         List<Version> versionList = new ArrayList<>();
         VersionConstraint versionConstraint =
-            getVersionConstraint(artifact.versionConstraint);
+            getVersionConstraint(artifactConstraint.versionConstraint);
         //get versions in constraint
         for(RelativePath p : FileCommands.listFiles(artifactPath)) {
             File f = p.getFile();
@@ -202,10 +228,10 @@ public class MavenHandler {
     }
 
     public static String getPathToArtifactFolder(
-            Artifact artifact) {
-        String groupIDStructure = artifact.groupID.replace(".", "/");
+            ArtifactConstraint artifactConstraint) {
+        String groupIDStructure = artifactConstraint.groupID.replace(".", "/");
         String artifactPathString =
-            "/" + groupIDStructure + "/" + artifact.artifactID;
+            "/" + groupIDStructure + "/" + artifactConstraint.artifactID;
         return artifactPathString;
     }
 
@@ -229,9 +255,9 @@ public class MavenHandler {
     }
 
     private List<String> getPossibleVersionOfRange(
-            Artifact artifact,
+            ArtifactConstraint artifactConstraint,
             List<RemoteRepository> repos) {
-        DefaultArtifact aetherArtifact = createDefaultArtifact(artifact);
+        DefaultArtifact aetherArtifact = createDefaultArtifact(artifactConstraint);
         VersionRangeRequest request = new VersionRangeRequest();
         request.setArtifact(aetherArtifact);
         request.setRepositories(repos);
@@ -249,10 +275,10 @@ public class MavenHandler {
     }
 
     private String getHighestVersion(
-            Artifact artifact,
+            ArtifactConstraint artifactConstraint,
             List<RemoteRepository> repos) {
         List<String> possibleVersions =
-            this.getPossibleVersionOfRange(artifact, repos);
+            this.getPossibleVersionOfRange(artifactConstraint, repos);
         int lastElementIndex = possibleVersions.size() - 1;
         if (lastElementIndex == -1) {
             return null;
@@ -281,14 +307,14 @@ public class MavenHandler {
     }
 
     public boolean isAnyArtifactAvailable(
-            Artifact artifact,
+            ArtifactConstraint artifactConstraint,
             List<Repository> repos) {
         List<RemoteRepository> remoteRepoList = new ArrayList<>();
         for(Repository r : repos) {
             remoteRepoList.add(createRemoteRepository(r));
         }
         List<String> versions =
-            this.getPossibleVersionOfRange(artifact, remoteRepoList);
+            this.getPossibleVersionOfRange(artifactConstraint, remoteRepoList);
         return !versions.isEmpty();
     }
 }

@@ -2,22 +2,22 @@ package build.pluto.maven;
 
 import java.io.Serializable;
 
-public class Artifact implements Serializable {
+public class ArtifactConstraint implements Serializable {
     public final String groupID;
     public final String artifactID;
-    public final String version;
+    public final String versionConstraint;
     public final String classifier;
     public final String extension;
 
-    public Artifact(
+    public ArtifactConstraint(
             String groupID,
             String artifactID,
-            String version,
+            String versionConstraint,
             String classifier,
             String extension) {
         this.groupID = groupID;
         this.artifactID = artifactID;
-        this.version = version;
+        this.versionConstraint = versionConstraint;
         this.classifier = classifier;
         this.extension = extension;
     }

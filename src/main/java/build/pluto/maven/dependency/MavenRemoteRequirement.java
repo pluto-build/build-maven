@@ -2,7 +2,7 @@ package build.pluto.maven.dependency;
 
 import build.pluto.builder.BuildUnitProvider;
 import build.pluto.dependency.RemoteRequirement;
-import build.pluto.maven.Artifact;
+import build.pluto.maven.ArtifactConstraint;
 import build.pluto.maven.MavenHandler;
 import build.pluto.maven.Repository;
 
@@ -15,30 +15,30 @@ import java.util.Map;
 public class MavenRemoteRequirement extends RemoteRequirement {
     private File localRepoLocation;
     private List<Repository> repos;
-    private List<Artifact> artifacts;
+    private List<ArtifactConstraint> artifactConstraints;
 
     public MavenRemoteRequirement(
             File localRepoLocation,
             List<Repository> repos,
-            List<Artifact> artifacts,
+            List<ArtifactConstraint> artifactConstraints,
             File persistentPath,
             long consistencyCheckInterval) {
         super(persistentPath, consistencyCheckInterval);
         this.localRepoLocation = localRepoLocation;
         this.repos = repos;
-        this.artifacts = artifacts;
+        this.artifactConstraints = artifactConstraints;
     }
 
     @Override
     public boolean isConsistentWithRemote() {
         MavenHandler handler = new MavenHandler(localRepoLocation);
-        Map<Artifact, String> currentVersions = new HashMap<>();
-        for (Artifact a : artifacts) {
+        Map<ArtifactConstraint, String> currentVersions = new HashMap<>();
+        for (ArtifactConstraint a : artifactConstraints) {
             String version = handler.getHighestLocalVersion(a);
             currentVersions.put(a, version);
         }
         if (currentVersions.keySet().size() != 0) {
-            for (Artifact a : artifacts) {
+            for (ArtifactConstraint a : artifactConstraints) {
                 String remoteVersion = handler.getHighestRemoteVersion(a, repos);
                 String localVersion = currentVersions.getOrDefault(a, "NO VERSION");
                 if (!remoteVersion.equals(localVersion)) {

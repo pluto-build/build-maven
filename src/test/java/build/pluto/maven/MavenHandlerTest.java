@@ -16,13 +16,13 @@ public class MavenHandlerTest {
     public void testResolveDependency() throws Exception {
         File localRepo = new File("test");
         MavenHandler handler = new MavenHandler(localRepo);
-        Artifact artifact = new Artifact(
+        ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "com.google.android",
                 "android",
                 "4.1.1.4",
                 null,
                 null);
-        Dependency dependency = new Dependency(artifact);
+        Dependency dependency = new Dependency(artifactConstraint);
         List<File> jarLocations =
             handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList());
         assertEquals(9, jarLocations.size());
@@ -32,20 +32,20 @@ public class MavenHandlerTest {
     public void testResolveDependencies() throws Exception {
         File localRepo = new File("test10");
         MavenHandler handler = new MavenHandler(localRepo);
-        Artifact artifact1 = new Artifact(
+        ArtifactConstraint artifactConstraint1 = new ArtifactConstraint(
                 "com.google.android",
                 "android",
                 "4.1.1.4",
                 null,
                 null);
-        Dependency dependency1 = new Dependency(artifact1);
-        Artifact artifact2 = new Artifact(
+        Dependency dependency1 = new Dependency(artifactConstraint1);
+        ArtifactConstraint artifactConstraint2 = new ArtifactConstraint(
                 "org.eclipse.jgit",
                 "org.eclipse.jgit",
                 "4.0.1.201506240215-r",
                 null,
                 null);
-        Dependency dependency2 = new Dependency(artifact2);
+        Dependency dependency2 = new Dependency(artifactConstraint2);
         List<File> jarLocations =
             handler.resolveDependencies(
                     Arrays.asList(dependency1, dependency2),
@@ -57,20 +57,20 @@ public class MavenHandlerTest {
     public void testResolveDependencyExclusion() throws Exception {
         File localRepo = new File("test11");
         MavenHandler handler = new MavenHandler(localRepo);
-        Artifact exclusion = new Artifact(
+        ArtifactConstraint exclusion = new ArtifactConstraint(
                 "org.json",
                 "json",
                 null,
                 "*",
                 "*");
-        Artifact artifact = new Artifact(
+        ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "com.google.android",
                 "android",
                 "4.1.1.4",
                 null,
                 null);
         Dependency dependency =
-            new Dependency(artifact, Arrays.asList(exclusion));
+            new Dependency(artifactConstraint, Arrays.asList(exclusion));
         List<File> jarLocations =
             handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList());
         File jsonLocation =
@@ -101,9 +101,9 @@ public class MavenHandlerTest {
                 "default",
                 null,
                 null);
-        Artifact artifact =
-            new Artifact("build.pluto", "pluto", "1.4.0-SNAPSHOT", null, null);
-        Dependency dependency = new Dependency(artifact);
+        ArtifactConstraint artifactConstraint =
+            new ArtifactConstraint("build.pluto", "pluto", "1.4.0-SNAPSHOT", null, null);
+        Dependency dependency = new Dependency(artifactConstraint);
         List<File> jarLocations =
             handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList(repo));
         assertEquals(7, jarLocations.size());
@@ -113,10 +113,10 @@ public class MavenHandlerTest {
     public void testGetHighestRemoteVersion() throws Exception {
         File localRepo = new File("test3");
         MavenHandler handler = new MavenHandler(localRepo);
-        Artifact artifact =
-            new Artifact("com.google.android", "android", "[0,)", null, null);
+        ArtifactConstraint artifactConstraint =
+            new ArtifactConstraint("com.google.android", "android", "[0,)", null, null);
         String newestVersion =
-            handler.getHighestRemoteVersion(artifact, Arrays.asList());
+            handler.getHighestRemoteVersion(artifactConstraint, Arrays.asList());
         assertEquals("4.1.1.4", newestVersion);
     }
 
@@ -126,9 +126,9 @@ public class MavenHandlerTest {
         MavenHandler handler = new MavenHandler(localRepo);
         String groupID = "com.google.android";
         String artifactID = "android";
-        Artifact artifact =
-            new Artifact(groupID, artifactID, "[0,)", null, null);
-        String newestVersion = handler.getHighestLocalVersion(artifact);
+        ArtifactConstraint artifactConstraint =
+            new ArtifactConstraint(groupID, artifactID, "[0,)", null, null);
+        String newestVersion = handler.getHighestLocalVersion(artifactConstraint);
         assertEquals("4.1.1.4", newestVersion);
     }
 
@@ -139,8 +139,8 @@ public class MavenHandlerTest {
         String groupID = "com.google.android";
         String artifactID = "android";
         String version = "4.1.1.4";
-        Artifact artifact = new Artifact(groupID, artifactID, version, null, null);
-        String newestVersion = handler.getHighestLocalVersion(artifact);
+        ArtifactConstraint artifactConstraint = new ArtifactConstraint(groupID, artifactID, version, null, null);
+        String newestVersion = handler.getHighestLocalVersion(artifactConstraint);
         assertEquals("4.1.1.4", newestVersion);
     }
 
@@ -148,10 +148,10 @@ public class MavenHandlerTest {
     public void testGetHighestRemoteVersionSmallerThan() throws Exception {
         File localRepo = new File("test3");
         MavenHandler handler = new MavenHandler(localRepo);
-        Artifact artifact =
-            new Artifact("com.google.android", "android", "(,4.1.1.4)", null, null);
+        ArtifactConstraint artifactConstraint =
+            new ArtifactConstraint("com.google.android", "android", "(,4.1.1.4)", null, null);
         String newestVersion =
-            handler.getHighestRemoteVersion(artifact, Arrays.asList());
+            handler.getHighestRemoteVersion(artifactConstraint, Arrays.asList());
         assertEquals("4.0.1.2", newestVersion);
     }
 
@@ -159,10 +159,10 @@ public class MavenHandlerTest {
     public void testGetNoVersionWithBiggerThan() throws Exception {
         File localRepo = new File("test3");
         MavenHandler handler = new MavenHandler(localRepo);
-        Artifact artifact =
-            new Artifact("com.google.android", "android", "(4.1.1.4,)", null, null);
+        ArtifactConstraint artifactConstraint =
+            new ArtifactConstraint("com.google.android", "android", "(4.1.1.4,)", null, null);
         String newestVersion =
-            handler.getHighestRemoteVersion(artifact, Arrays.asList());
+            handler.getHighestRemoteVersion(artifactConstraint, Arrays.asList());
         assertEquals(null, newestVersion);
     }
 
@@ -170,10 +170,10 @@ public class MavenHandlerTest {
     public void testGetNoVersionWithExactVersion() throws Exception {
         File localRepo = new File("test3");
         MavenHandler handler = new MavenHandler(localRepo);
-        Artifact artifact =
-            new Artifact("com.google.android", "android", "[1.5_r0]", null, null);
+        ArtifactConstraint artifactConstraint =
+            new ArtifactConstraint("com.google.android", "android", "[1.5_r0]", null, null);
         String newestVersion =
-            handler.getHighestRemoteVersion(artifact, Arrays.asList());
+            handler.getHighestRemoteVersion(artifactConstraint, Arrays.asList());
         assertEquals(null, newestVersion);
     }
 }
