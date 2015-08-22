@@ -1,4 +1,4 @@
-package build.pluto.maven;
+package build.pluto.maven.input;
 
 import org.eclipse.aether.repository.RepositoryPolicy;
 
