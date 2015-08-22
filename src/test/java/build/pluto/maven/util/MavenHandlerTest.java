@@ -4,6 +4,7 @@ import build.pluto.maven.input.ArtifactConstraint;
 import build.pluto.maven.input.Dependency;
 import build.pluto.maven.input.Exclusion;
 import build.pluto.maven.input.Repository;
+import build.pluto.maven.util.MavenHandler;
 import org.junit.Test;
 
 import java.io.File;

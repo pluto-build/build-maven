@@ -2,7 +2,7 @@ package build.pluto.maven.dependency;
 
 import build.pluto.builder.BuildUnitProvider;
 import build.pluto.dependency.RemoteRequirement;
-import build.pluto.maven.MavenHandler;
+import build.pluto.maven.util.MavenHandler;
 import build.pluto.maven.input.ArtifactConstraint;
 import build.pluto.maven.input.Repository;
 

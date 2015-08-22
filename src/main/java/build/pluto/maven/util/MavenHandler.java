@@ -1,4 +1,4 @@
-package build.pluto.maven;
+package build.pluto.maven.util;
 
 import build.pluto.maven.input.*;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
@@ -158,7 +158,7 @@ public class MavenHandler {
         sb.append(artifact.version);
         return new DefaultArtifact(sb.toString());
     }
-    
+
     public static Artifact transformToArtifact(ArtifactConstraint artifactConstraint) {
         return new Artifact(
                 artifactConstraint.groupID,
