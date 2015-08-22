@@ -57,10 +57,9 @@ public class MavenHandlerTest {
     public void testResolveDependencyExclusion() throws Exception {
         File localRepo = new File("test11");
         MavenHandler handler = new MavenHandler(localRepo);
-        ArtifactConstraint exclusion = new ArtifactConstraint(
+        Exclusion exclusion = new Exclusion(
                 "org.json",
                 "json",
-                null,
                 "*",
                 "*");
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(

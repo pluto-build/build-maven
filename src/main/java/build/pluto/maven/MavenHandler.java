@@ -8,7 +8,6 @@ import org.eclipse.aether.collection.CollectRequest;
 import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.deployment.DeployRequest;
 import org.eclipse.aether.deployment.DeploymentException;
-import org.eclipse.aether.graph.Exclusion;
 import org.eclipse.aether.impl.DefaultServiceLocator;
 import org.eclipse.aether.repository.LocalRepository;
 import org.eclipse.aether.repository.RemoteRepository;
@@ -107,11 +106,15 @@ public class MavenHandler {
     private org.eclipse.aether.graph.Dependency createDependency(
             Dependency dependency) {
         DefaultArtifact aetherArtifact = createDefaultArtifact(dependency.artifactConstraint);
-        List<Exclusion> exclusions = new ArrayList<>();
-        for (ArtifactConstraint a : dependency.exclusions) {
-            Exclusion e =
-                new Exclusion(a.groupID, a.artifactID, a.classifier, a.extension);
-            exclusions.add(e);
+        List<org.eclipse.aether.graph.Exclusion> exclusions = new ArrayList<>();
+        for (Exclusion e : dependency.exclusions) {
+            org.eclipse.aether.graph.Exclusion aetherExclusion =
+                new org.eclipse.aether.graph.Exclusion(
+                        e.groupID,
+                        e.artifactID,
+                        e.classifier,
+                        e.extension);
+            exclusions.add(aetherExclusion);
         }
         //TODO: Scope?
         return new org.eclipse.aether.graph.Dependency(

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Dependency implements Serializable {
     public final ArtifactConstraint artifactConstraint;
-    public final List<ArtifactConstraint> exclusions;
+    public final List<Exclusion> exclusions;
 
     /**
      * @param artifactConstraint is the artifactConstraint that the dependency wants to download.
@@ -23,7 +23,7 @@ public class Dependency implements Serializable {
      */
     public Dependency(
             ArtifactConstraint artifactConstraint,
-            List<ArtifactConstraint> exclusions) {
+            List<Exclusion> exclusions) {
         this.artifactConstraint = artifactConstraint;
         this.exclusions = exclusions;
     }
