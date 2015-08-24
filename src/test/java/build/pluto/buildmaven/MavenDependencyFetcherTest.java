@@ -1,10 +1,10 @@
-package build.pluto.maven;
+package build.pluto.buildmaven;
 
 import build.pluto.builder.BuildManagers;
 import build.pluto.builder.BuildRequest;
 import build.pluto.builder.RequiredBuilderFailed;
-import build.pluto.maven.input.*;
-import build.pluto.maven.util.MavenHandler;
+import build.pluto.buildmaven.input.*;
+import build.pluto.buildmaven.util.MavenHandler;
 import build.pluto.test.build.ScopedBuildTest;
 import build.pluto.test.build.ScopedPath;
 import org.junit.Before;

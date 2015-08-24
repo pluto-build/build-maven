@@ -1,4 +1,4 @@
-package build.pluto.maven.input;
+package build.pluto.buildmaven.input;
 
 import java.io.File;
 import java.io.Serializable;

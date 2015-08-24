@@ -1,6 +1,6 @@
-package build.pluto.maven.util;
+package build.pluto.buildmaven.util;
 
-import build.pluto.maven.input.*;
+import build.pluto.buildmaven.input.*;
 import org.apache.maven.repository.internal.MavenRepositorySystemUtils;
 import org.eclipse.aether.DefaultRepositorySystemSession;
 import org.eclipse.aether.RepositorySystem;

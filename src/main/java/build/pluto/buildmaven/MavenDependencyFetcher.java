@@ -1,21 +1,22 @@
-package build.pluto.maven;
+package build.pluto.buildmaven;
 
 import build.pluto.builder.Builder;
 import build.pluto.builder.BuilderFactory;
-import build.pluto.maven.dependency.MavenRemoteRequirement;
-import build.pluto.maven.input.ArtifactConstraint;
-import build.pluto.maven.input.Dependency;
-import build.pluto.maven.input.MavenInput;
-import build.pluto.maven.util.MavenHandler;
-import build.pluto.output.None;
+import build.pluto.buildmaven.dependency.MavenRemoteRequirement;
+import build.pluto.buildmaven.input.ArtifactConstraint;
+import build.pluto.buildmaven.input.Dependency;
+import build.pluto.buildmaven.input.MavenInput;
+import build.pluto.buildmaven.util.MavenHandler;
+import build.pluto.output.Out;
+import build.pluto.output.OutputPersisted;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MavenDependencyFetcher extends Builder<MavenInput, None> {
+public class MavenDependencyFetcher extends Builder<MavenInput, Out<ArrayList<File>>> {
 
-    public static BuilderFactory<MavenInput, None, MavenDependencyFetcher> factory
+    public static BuilderFactory<MavenInput, Out<ArrayList<File>>, MavenDependencyFetcher> factory
         = BuilderFactory.of(MavenDependencyFetcher.class, MavenInput.class);
 
     public MavenDependencyFetcher(MavenInput input) {
@@ -33,7 +34,7 @@ public class MavenDependencyFetcher extends Builder<MavenInput, None> {
     }
 
     @Override
-    protected None build(MavenInput input) throws Throwable {
+    protected Out<ArrayList<File>> build(MavenInput input) throws Throwable {
         if(!isInputValid(input)) {
             throw new IllegalArgumentException("The given dependencies could not be resolved");
         }
@@ -50,13 +51,13 @@ public class MavenDependencyFetcher extends Builder<MavenInput, None> {
                 input.consistencyCheckInterval);
         this.requireOther(mavenRequirement);
         MavenHandler handler = new MavenHandler(input.localRepoLocation);
-        List<File> artifactLocations =
-            handler.resolveDependencies(input.dependencyList, input.repositoryList);
+        ArrayList<File> artifactLocations = new ArrayList<>(
+            handler.resolveDependencies(input.dependencyList, input.repositoryList));
 
         for(File f : artifactLocations) {
             this.provide(f);
         }
-        return None.val;
+        return OutputPersisted.of(artifactLocations);
     }
 
     private boolean isInputValid(MavenInput input) {

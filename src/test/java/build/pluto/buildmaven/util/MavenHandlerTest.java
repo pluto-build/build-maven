@@ -1,10 +1,10 @@
-package build.pluto.maven;
+package build.pluto.buildmaven;
 
-import build.pluto.maven.input.ArtifactConstraint;
-import build.pluto.maven.input.Dependency;
-import build.pluto.maven.input.Exclusion;
-import build.pluto.maven.input.Repository;
-import build.pluto.maven.util.MavenHandler;
+import build.pluto.buildmaven.input.ArtifactConstraint;
+import build.pluto.buildmaven.input.Dependency;
+import build.pluto.buildmaven.input.Exclusion;
+import build.pluto.buildmaven.input.Repository;
+import build.pluto.buildmaven.util.MavenHandler;
 import org.junit.Test;
 
 import java.io.File;
