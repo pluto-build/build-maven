@@ -2,6 +2,7 @@ package build.pluto.buildmaven;
 
 import build.pluto.builder.Builder;
 import build.pluto.builder.BuilderFactory;
+import build.pluto.builder.BuilderFactoryFactory;
 import build.pluto.buildmaven.dependency.MavenRemoteRequirement;
 import build.pluto.buildmaven.input.ArtifactConstraint;
 import build.pluto.buildmaven.input.Dependency;
@@ -17,7 +18,7 @@ import java.util.List;
 public class MavenDependencyFetcher extends Builder<MavenInput, Out<ArrayList<File>>> {
 
     public static BuilderFactory<MavenInput, Out<ArrayList<File>>, MavenDependencyFetcher> factory
-        = BuilderFactory.of(MavenDependencyFetcher.class, MavenInput.class);
+        = BuilderFactoryFactory.of(MavenDependencyFetcher.class, MavenInput.class);
 
     public MavenDependencyFetcher(MavenInput input) {
         super(input);
@@ -29,7 +30,7 @@ public class MavenDependencyFetcher extends Builder<MavenInput, Out<ArrayList<Fi
     }
 
     @Override
-    protected File persistentPath(MavenInput input) {
+    public File persistentPath(MavenInput input) {
         return new File(input.localRepoLocation, "maven.dep");
     }
 
