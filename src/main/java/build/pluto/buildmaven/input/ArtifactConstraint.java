@@ -28,4 +28,21 @@ public class ArtifactConstraint implements Serializable {
         this.classifier = classifier;
         this.extension = extension;
     }
+
+    public String toString() {
+        StringBuffer sb = new StringBuffer();
+        sb.append(groupID).append(":");
+        sb.append(artifactID);
+        if (extension != null) {
+            sb.append(":");
+            sb.append(extension);
+        }
+        if (classifier != null) {
+            sb.append(":");
+            sb.append(classifier);
+        }
+        sb.append(":");
+        sb.append(versionConstraint);
+        return sb.toString();
+    }
 }

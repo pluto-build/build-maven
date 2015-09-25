@@ -126,37 +126,11 @@ public class MavenHandler {
     }
 
     public DefaultArtifact createDefaultArtifact(ArtifactConstraint artifactConstraint) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(artifactConstraint.groupID).append(":");
-        sb.append(artifactConstraint.artifactID);
-        if (artifactConstraint.extension != null) {
-            sb.append(":");
-            sb.append(artifactConstraint.extension);
-        }
-        if (artifactConstraint.classifier != null) {
-            sb.append(":");
-            sb.append(artifactConstraint.classifier);
-        }
-        sb.append(":");
-        sb.append(artifactConstraint.versionConstraint);
-        return new DefaultArtifact(sb.toString());
+        return new DefaultArtifact(artifactConstraint.toString());
     }
 
     public DefaultArtifact createDefaultArtifact(Artifact artifact) {
-        StringBuffer sb = new StringBuffer();
-        sb.append(artifact.groupID).append(":");
-        sb.append(artifact.artifactID);
-        if (artifact.extension != null) {
-            sb.append(":");
-            sb.append(artifact.extension);
-        }
-        if (artifact.classifier != null) {
-            sb.append(":");
-            sb.append(artifact.classifier);
-        }
-        sb.append(":");
-        sb.append(artifact.version);
-        return new DefaultArtifact(sb.toString());
+        return new DefaultArtifact(artifact.toString());
     }
 
     public static Artifact transformToArtifact(ArtifactConstraint artifactConstraint) {

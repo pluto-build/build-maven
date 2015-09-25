@@ -36,9 +36,7 @@ public class MavenDependencyFetcher extends Builder<MavenInput, Out<ArrayList<Fi
 
     @Override
     protected Out<ArrayList<File>> build(MavenInput input) throws Throwable {
-        if(!isInputValid(input)) {
-            throw new IllegalArgumentException("The given dependencies could not be resolved");
-        }
+        isInputValid(input);
         File tsPersistentPath = new File(input.localRepoLocation, "maven.dep.time");
         List<ArtifactConstraint> artifactConstraintList = new ArrayList<>();
         for (Dependency d : input.dependencyList) {
@@ -61,13 +59,13 @@ public class MavenDependencyFetcher extends Builder<MavenInput, Out<ArrayList<Fi
         return OutputPersisted.of(artifactLocations);
     }
 
-    private boolean isInputValid(MavenInput input) {
+    private void isInputValid(MavenInput input) {
         MavenHandler handler = new MavenHandler(input.localRepoLocation);
         for(Dependency d : input.dependencyList) {
             if(!handler.isAnyArtifactAvailable(d.artifactConstraint, input.repositoryList)) {
-                return false;
+                String artifactString = d.artifactConstraint.toString();
+                throw new IllegalArgumentException("The artifact " +  artifactString + " can not be found");
             }
         }
-        return true;
     }
 }
