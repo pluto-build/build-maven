@@ -15,12 +15,12 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MavenDependencyFetcher extends Builder<MavenInput, Out<ArrayList<File>>> {
+public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<File>>> {
 
-    public static BuilderFactory<MavenInput, Out<ArrayList<File>>, MavenDependencyFetcher> factory
-        = BuilderFactoryFactory.of(MavenDependencyFetcher.class, MavenInput.class);
+    public static BuilderFactory<MavenInput, Out<ArrayList<File>>, MavenDependencyResolver> factory
+        = BuilderFactoryFactory.of(MavenDependencyResolver.class, MavenInput.class);
 
-    public MavenDependencyFetcher(MavenInput input) {
+    public MavenDependencyResolver(MavenInput input) {
         super(input);
     }
 

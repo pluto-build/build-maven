@@ -22,7 +22,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
-public class MavenDependencyFetcherTest extends ScopedBuildTest {
+public class MavenDependencyResolverTest extends ScopedBuildTest {
     @ScopedPath("")
     private File localRepoLocation;
 
@@ -87,7 +87,7 @@ public class MavenDependencyFetcherTest extends ScopedBuildTest {
         inputBuilder.setRepositoryList(this.repoList);
         MavenInput input = inputBuilder.build();
         BuildRequest<?, ?, ?, ?> buildRequest =
-            new BuildRequest(MavenDependencyFetcher.factory, input);
+            new BuildRequest(MavenDependencyResolver.factory, input);
         BuildManagers.build(buildRequest);
     }
 
