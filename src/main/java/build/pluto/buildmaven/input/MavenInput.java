@@ -6,15 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MavenInput implements Serializable {
-
-    private static final long serialVersionUID = 89438938480L;
+    private static final long serialVersionUID = -813263267417646266L;
 
     public final File localRepoLocation;
-
     public final List<Dependency> dependencyList;
-
     public final List<Repository> repositoryList;
-
     public final long consistencyCheckInterval;
 
     private MavenInput(Builder builder) {

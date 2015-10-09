@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Dependency implements Serializable {
+    private static final long serialVersionUID = -6947544476611313880L;
+
     public final ArtifactConstraint artifactConstraint;
     public final List<Exclusion> exclusions;
 

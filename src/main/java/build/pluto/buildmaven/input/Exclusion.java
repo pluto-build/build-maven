@@ -3,6 +3,8 @@ package build.pluto.buildmaven.input;
 import java.io.Serializable;
 
 public class Exclusion implements Serializable {
+    private static final long serialVersionUID = 717645477131460803L;
+
     public final String groupID;
     public final String artifactID;
     public final String classifier;

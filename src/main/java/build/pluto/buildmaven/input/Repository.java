@@ -5,6 +5,7 @@ import org.eclipse.aether.repository.RepositoryPolicy;
 import java.io.Serializable;
 
 public class Repository implements Serializable {
+    private static final long serialVersionUID = 4329409646442649789L;
 
     public final String id;
     public final String url;

@@ -3,6 +3,8 @@ package build.pluto.buildmaven.input;
 import java.io.Serializable;
 
 public class ArtifactConstraint implements Serializable {
+    private static final long serialVersionUID = 2283901698966843801L;
+
     public final String groupID;
     public final String artifactID;
     public final String versionConstraint;
