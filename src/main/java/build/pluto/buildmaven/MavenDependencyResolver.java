@@ -38,10 +38,6 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<F
 
     @Override
     protected Out<ArrayList<File>> build(MavenInput input) throws Throwable {
-        //TODO: if artifacts are available locally but remotes can not be accessed
-        //continue and do not throw
-        isInputValid(input);
-        // group dependencies with the same interval
         Map<Long, List<ArtifactConstraint>> dependencyGroups = new HashMap<>();
         for (Dependency dep : input.dependencyList) {
             if (!dependencyGroups.containsKey(dep.consistencyCheckInterval)) {
@@ -73,15 +69,5 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<F
             this.provide(f);
         }
         return OutputPersisted.of(artifactLocations);
-    }
-
-    private void isInputValid(MavenInput input) {
-        MavenHandler handler = new MavenHandler(input.localRepoLocation);
-        for(Dependency d : input.dependencyList) {
-            if(!handler.isAnyArtifactAvailable(d.artifactConstraint, input.repositoryList)) {
-                String artifactString = d.artifactConstraint.toString();
-                throw new IllegalArgumentException("The artifact " +  artifactString + " can not be found");
-            }
-        }
     }
 }
