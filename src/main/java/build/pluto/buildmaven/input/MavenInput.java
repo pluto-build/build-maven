@@ -11,13 +11,11 @@ public class MavenInput implements Serializable {
     public final File localRepoLocation;
     public final List<Dependency> dependencyList;
     public final List<Repository> repositoryList;
-    public final long consistencyCheckInterval;
 
     private MavenInput(Builder builder) {
         this.localRepoLocation = builder.localRepoLocation;
         this.dependencyList = builder.dependencyList;
         this.repositoryList = builder.repositoryList;
-        this.consistencyCheckInterval = builder.consistencyCheckInterval;
     }
 
     public static class Builder {
@@ -26,8 +24,6 @@ public class MavenInput implements Serializable {
         private List<Dependency> dependencyList;
 
         private List<Repository> repositoryList;
-
-        private long consistencyCheckInterval = 0;
 
         /**
          * @param localRepoLocation where the artifacts that get downloaded
@@ -41,17 +37,6 @@ public class MavenInput implements Serializable {
             this.dependencyList = dependencyList;
             this.repositoryList = new ArrayList<>();
         }
-
-        /**
-         * Sets the interval in which the consistency with the remote is
-         * checked.
-         * @param consistencyCheckInterval interval in milliseconds
-         */
-        public Builder setConsistencyCheckInterval(long consistencyCheckInterval) {
-            this.consistencyCheckInterval = consistencyCheckInterval;
-            return this;
-        }
-
 
         /**
          * Set repositories to use for resolving the artifacts.

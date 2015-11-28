@@ -291,6 +291,10 @@ public class MavenHandler {
         for(Repository r : repos) {
             remoteRepoList.add(createRemoteRepository(r));
         }
+        // String localVersion = this.getHighestLocalVersion(artifactConstraint);
+        // if (localVersion != null) {
+        //     return true;
+        // }
         List<String> versions =
             this.getPossibleVersionOfRange(artifactConstraint, remoteRepoList);
         return !versions.isEmpty();

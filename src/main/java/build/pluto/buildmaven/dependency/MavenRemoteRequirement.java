@@ -32,23 +32,25 @@ public class MavenRemoteRequirement extends RemoteRequirement {
     @Override
     public boolean isConsistentWithRemote() {
         MavenHandler handler = new MavenHandler(localRepoLocation);
-        Map<ArtifactConstraint, String> currentVersions = new HashMap<>();
+        Map<ArtifactConstraint, String> localVersions = new HashMap<>();
         for (ArtifactConstraint a : artifactConstraints) {
-            String version = handler.getHighestLocalVersion(a);
-            currentVersions.put(a, version);
-        }
-        if (currentVersions.keySet().size() != 0) {
-            for (ArtifactConstraint a : artifactConstraints) {
-                String remoteVersion = handler.getHighestRemoteVersion(a, repos);
-                String localVersion = currentVersions.getOrDefault(a, "NO VERSION");
-                if (!remoteVersion.equals(localVersion)) {
-                    return false;
-                }
+            String localVersion = handler.getHighestLocalVersion(a);
+            if (localVersion != null) {
+                localVersions.put(a, localVersion);
             }
-            return true;
-        } else {
+        }
+        // if there is no local version for any of the constraints
+        if (localVersions.size() == 0) {
             return false;
         }
+        for (ArtifactConstraint a : localVersions.keySet()) {
+            String remoteVersion = handler.getHighestRemoteVersion(a, repos);
+            String localVersion = localVersions.getOrDefault(a, null);
+            if (localVersion == null || !localVersion.equals(remoteVersion)) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override

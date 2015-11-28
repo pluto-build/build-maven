@@ -28,7 +28,6 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
 
     private List<Repository> repoList;
     private List<Dependency> dependencyList;
-    private long consistencyCheckInterval;
     private MavenHandler handler;
 
     @Before
@@ -42,7 +41,6 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
                 null);
         repoList = Arrays.asList(repo);
         dependencyList = new ArrayList<>();
-        consistencyCheckInterval = 0L;
         handler = new MavenHandler(localRepoLocation);
     }
 
@@ -83,7 +81,6 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         MavenInput.Builder inputBuilder = new MavenInput.Builder(
                 localRepoLocation,
                 dependencyList);
-        inputBuilder.setConsistencyCheckInterval(consistencyCheckInterval);
         inputBuilder.setRepositoryList(this.repoList);
         MavenInput input = inputBuilder.build();
         BuildRequest<?, ?, ?, ?> buildRequest =
@@ -182,7 +179,6 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
 
     @Test
     public void testDoubleExecutionWithNewVersionButToEarly() throws Exception {
-        consistencyCheckInterval = 90000L;
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
@@ -192,7 +188,8 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifactConstraint = changeVersionConstraint(artifactConstraint, "[0.0,)");
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, new ArrayList<>(), 90000L);
+
         dependencyList.add(dependency);
         build();
         ArtifactConstraint newArtifactConstraint = changeVersionConstraint(artifactConstraint, "2.0");
