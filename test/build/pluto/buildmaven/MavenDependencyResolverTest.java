@@ -7,6 +7,7 @@ import build.pluto.buildmaven.input.*;
 import build.pluto.buildmaven.util.MavenHandler;
 import build.pluto.test.build.ScopedBuildTest;
 import build.pluto.test.build.ScopedPath;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.sugarj.common.FileCommands;
@@ -45,7 +46,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
     }
 
     @Test
-    public void testSingleSimpleExecution() throws Exception {
+    public void testSingleSimpleExecution() throws Throwable {
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
@@ -77,14 +78,14 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
                 repo);
     }
 
-    private void build() throws IOException {
+    private void build() throws Throwable {
         MavenInput.Builder inputBuilder = new MavenInput.Builder(
                 localRepoLocation,
                 dependencyList);
         inputBuilder.setRepositoryList(this.repoList);
         MavenInput input = inputBuilder.build();
         BuildRequest<?, ?, ?, ?> buildRequest =
-            new BuildRequest(MavenDependencyResolver.factory, input);
+            new BuildRequest<>(MavenDependencyResolver.factory, input);
         BuildManagers.build(buildRequest);
     }
 
@@ -101,7 +102,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
     }
 
     @Test
-    public void testDoubleExecutionWithoutNewVersion() throws Exception {
+    public void testDoubleExecutionWithoutNewVersion() throws Throwable {
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
@@ -120,7 +121,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
     }
 
     @Test
-    public void testDoubleExecutionWithNewVersionInRange() throws Exception {
+    public void testDoubleExecutionWithNewVersionInRange() throws Throwable {
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
@@ -155,7 +156,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
 
     @Test
     public void testDoubleExecutionWithNewVersionOutsideOfRange()
-            throws Exception {
+            throws Throwable {
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
@@ -178,7 +179,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
     }
 
     @Test
-    public void testDoubleExecutionWithNewVersionButToEarly() throws Exception {
+    public void testDoubleExecutionWithNewVersionButToEarly() throws Throwable {
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
@@ -188,7 +189,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifactConstraint = changeVersionConstraint(artifactConstraint, "[0.0,)");
-        Dependency dependency = new Dependency(artifactConstraint, new ArrayList<>(), 90000L);
+        Dependency dependency = new Dependency(artifactConstraint, new ArrayList<Exclusion>(), 90000L);
 
         dependencyList.add(dependency);
         build();
@@ -202,7 +203,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
     }
 
     @Test
-    public void testDoubleExecutionTwoDependenciesWithNewVersionInRange() throws Exception {
+    public void testDoubleExecutionTwoDependenciesWithNewVersionInRange() throws Throwable {
         ArtifactConstraint artifactConstraint1 = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",
@@ -237,7 +238,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
     }
 
     @Test(expected = RequiredBuilderFailed.class)
-    public void testSingleExecutionWithWrongArtifact() throws Exception {
+    public void testSingleExecutionWithWrongArtifact() throws Throwable {
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
                 "dummy-maven",

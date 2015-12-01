@@ -1,4 +1,4 @@
-package build.pluto.buildmaven;
+package build.pluto.buildmaven.util;
 
 import build.pluto.buildmaven.input.ArtifactConstraint;
 import build.pluto.buildmaven.input.Dependency;
@@ -29,7 +29,7 @@ public class MavenHandlerTest {
                 null);
         Dependency dependency = new Dependency(artifactConstraint);
         List<File> jarLocations =
-            handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList());
+            handler.resolveDependencies(Arrays.asList(dependency), Arrays.<Repository>asList());
         assertEquals(9, jarLocations.size());
     }
 
@@ -54,7 +54,7 @@ public class MavenHandlerTest {
         List<File> jarLocations =
             handler.resolveDependencies(
                     Arrays.asList(dependency1, dependency2),
-                    Arrays.asList());
+                    Arrays.<Repository>asList());
         assertEquals(13, jarLocations.size());
     }
 
@@ -76,7 +76,7 @@ public class MavenHandlerTest {
         Dependency dependency =
             new Dependency(artifactConstraint, Arrays.asList(exclusion));
         List<File> jarLocations =
-            handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList());
+            handler.resolveDependencies(Arrays.asList(dependency), Arrays.<Repository>asList());
         File jsonLocation =
             new File(localRepo, "org/json/json/20080701/json-20080701.jar");
         assertFalse(containsArtifact(jsonLocation, jarLocations));
@@ -120,7 +120,7 @@ public class MavenHandlerTest {
         ArtifactConstraint artifactConstraint =
             new ArtifactConstraint("com.google.android", "android", "[0,)", null, null);
         String newestVersion =
-            handler.getHighestRemoteVersion(artifactConstraint, Arrays.asList());
+            handler.getHighestRemoteVersion(artifactConstraint, Arrays.<Repository>asList());
         assertEquals("4.1.1.4", newestVersion);
     }
 
@@ -155,7 +155,7 @@ public class MavenHandlerTest {
         ArtifactConstraint artifactConstraint =
             new ArtifactConstraint("com.google.android", "android", "(,4.1.1.4)", null, null);
         String newestVersion =
-            handler.getHighestRemoteVersion(artifactConstraint, Arrays.asList());
+            handler.getHighestRemoteVersion(artifactConstraint, Arrays.<Repository>asList());
         assertEquals("4.0.1.2", newestVersion);
     }
 
@@ -166,7 +166,7 @@ public class MavenHandlerTest {
         ArtifactConstraint artifactConstraint =
             new ArtifactConstraint("com.google.android", "android", "(4.1.1.4,)", null, null);
         String newestVersion =
-            handler.getHighestRemoteVersion(artifactConstraint, Arrays.asList());
+            handler.getHighestRemoteVersion(artifactConstraint, Arrays.<Repository>asList());
         assertEquals(null, newestVersion);
     }
 
@@ -177,7 +177,7 @@ public class MavenHandlerTest {
         ArtifactConstraint artifactConstraint =
             new ArtifactConstraint("com.google.android", "android", "[1.5_r0]", null, null);
         String newestVersion =
-            handler.getHighestRemoteVersion(artifactConstraint, Arrays.asList());
+            handler.getHighestRemoteVersion(artifactConstraint, Arrays.<Repository>asList());
         assertEquals(null, newestVersion);
     }
 }

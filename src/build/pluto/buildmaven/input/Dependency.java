@@ -15,7 +15,7 @@ public class Dependency implements Serializable {
      * @param artifactConstraint is the artifactConstraint that the dependency wants to download.
      */
     public Dependency(ArtifactConstraint artifactConstraint) {
-        this(artifactConstraint, new ArrayList<>(), 0L);
+        this(artifactConstraint, new ArrayList<Exclusion>(), 0L);
     }
 
     /**

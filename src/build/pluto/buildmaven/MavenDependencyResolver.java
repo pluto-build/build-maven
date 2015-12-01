@@ -45,7 +45,7 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<F
         Map<Long, List<ArtifactConstraint>> dependencyGroups = new HashMap<>();
         for (Dependency dep : input.dependencyList) {
             if (!dependencyGroups.containsKey(dep.consistencyCheckInterval)) {
-                dependencyGroups.put(dep.consistencyCheckInterval, new ArrayList<>());
+                dependencyGroups.put(dep.consistencyCheckInterval, new ArrayList<ArtifactConstraint>());
             }
             List<ArtifactConstraint> group =
                 dependencyGroups.get(dep.consistencyCheckInterval);

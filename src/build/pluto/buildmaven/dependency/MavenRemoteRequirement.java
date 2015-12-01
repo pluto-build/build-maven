@@ -1,19 +1,21 @@
 package build.pluto.buildmaven.dependency;
 
-import build.pluto.builder.BuildUnitProvider;
-import build.pluto.dependency.RemoteRequirement;
-import build.pluto.buildmaven.util.MavenHandler;
-import build.pluto.buildmaven.input.ArtifactConstraint;
-import build.pluto.buildmaven.input.Repository;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import build.pluto.builder.BuildUnitProvider;
+import build.pluto.buildmaven.input.ArtifactConstraint;
+import build.pluto.buildmaven.input.Repository;
+import build.pluto.buildmaven.util.MavenHandler;
+import build.pluto.dependency.RemoteRequirement;
+
 public class MavenRemoteRequirement extends RemoteRequirement {
-    private File localRepoLocation;
+    private static final long serialVersionUID = 531892600767381323L;
+    
+	private File localRepoLocation;
     private List<Repository> repos;
     private List<ArtifactConstraint> artifactConstraints;
 
@@ -45,7 +47,7 @@ public class MavenRemoteRequirement extends RemoteRequirement {
         }
         for (ArtifactConstraint a : localVersions.keySet()) {
             String remoteVersion = handler.getHighestRemoteVersion(a, repos);
-            String localVersion = localVersions.getOrDefault(a, null);
+            String localVersion = localVersions.get(a);
             if (localVersion == null || !localVersion.equals(remoteVersion)) {
                 return false;
             }
