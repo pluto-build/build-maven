@@ -1,10 +1,8 @@
 package build.pluto.buildmaven.util;
 
-import build.pluto.buildmaven.input.ArtifactConstraint;
-import build.pluto.buildmaven.input.Dependency;
-import build.pluto.buildmaven.input.Exclusion;
-import build.pluto.buildmaven.input.Repository;
-import build.pluto.buildmaven.util.MavenHandler;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,9 +14,10 @@ import org.junit.AfterClass;
 import org.junit.Test;
 import org.sugarj.common.FileCommands;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.fail;
+import build.pluto.buildmaven.input.ArtifactConstraint;
+import build.pluto.buildmaven.input.Dependency;
+import build.pluto.buildmaven.input.Exclusion;
+import build.pluto.buildmaven.input.Repository;
 
 public class MavenHandlerTest {
 

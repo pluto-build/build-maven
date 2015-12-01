@@ -1,16 +1,7 @@
 package build.pluto.buildmaven;
 
-import build.pluto.builder.BuildManagers;
-import build.pluto.builder.BuildRequest;
-import build.pluto.builder.RequiredBuilderFailed;
-import build.pluto.buildmaven.input.*;
-import build.pluto.buildmaven.util.MavenHandler;
-import build.pluto.test.build.ScopedBuildTest;
-import build.pluto.test.build.ScopedPath;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.sugarj.common.FileCommands;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +11,22 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.eclipse.aether.resolution.DependencyResolutionException;
+import org.junit.Before;
+import org.junit.Test;
+import org.sugarj.common.FileCommands;
+
+import build.pluto.builder.BuildManagers;
+import build.pluto.builder.BuildRequest;
+import build.pluto.buildmaven.input.Artifact;
+import build.pluto.buildmaven.input.ArtifactConstraint;
+import build.pluto.buildmaven.input.Dependency;
+import build.pluto.buildmaven.input.Exclusion;
+import build.pluto.buildmaven.input.MavenInput;
+import build.pluto.buildmaven.input.Repository;
+import build.pluto.buildmaven.util.MavenHandler;
+import build.pluto.test.build.ScopedBuildTest;
+import build.pluto.test.build.ScopedPath;
 
 public class MavenDependencyResolverTest extends ScopedBuildTest {
     @ScopedPath("")
@@ -238,7 +243,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         deleteRepo(repoList.get(0));
     }
 
-    @Test(expected = RequiredBuilderFailed.class)
+    @Test(expected = DependencyResolutionException.class)
     public void testSingleExecutionWithWrongArtifact() throws Throwable {
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
