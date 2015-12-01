@@ -56,6 +56,27 @@ public class MavenRemoteRequirement extends RemoteRequirement {
     }
 
     @Override
+    public boolean isRemoteResourceAccessible() {
+        MavenHandler handler = new MavenHandler(localRepoLocation);
+        return handler.isArtifactResolvable(artifactConstraints.get(0), repos);
+    }
+
+    @Override
+    public boolean isLocalResourceAvailable() {
+        if (!localRepoLocation.exists()) {
+            return false;
+        }
+        MavenHandler handler = new MavenHandler(localRepoLocation);
+        for (ArtifactConstraint a : artifactConstraints) {
+            String localVersion = handler.getHighestLocalVersion(a);
+            if (localVersion == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
     public boolean tryMakeConsistent(BuildUnitProvider manager) throws IOException {
         return this.isConsistent();
     }

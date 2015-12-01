@@ -14,7 +14,10 @@ import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.deployment.DeployRequest;
 import org.eclipse.aether.deployment.DeploymentException;
 import org.eclipse.aether.impl.DefaultServiceLocator;
+import org.eclipse.aether.repository.LocalArtifactRequest;
+import org.eclipse.aether.repository.LocalArtifactResult;
 import org.eclipse.aether.repository.LocalRepository;
+import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.repository.RepositoryPolicy;
 import org.eclipse.aether.resolution.ArtifactResult;
@@ -308,5 +311,26 @@ public class MavenHandler {
         List<String> versions =
             this.getPossibleVersionOfRange(artifactConstraint, remoteRepoList);
         return !versions.isEmpty();
+    }
+
+    public boolean isArtifactResolvable(
+            ArtifactConstraint artifactConstraint,
+            List<Repository> repos) {
+        VersionRangeRequest request = new VersionRangeRequest();
+        request = request.setArtifact(createDefaultArtifact(artifactConstraint));
+        List<RemoteRepository> reposWithRemote = new ArrayList<>();
+        reposWithRemote.add(this.remote);
+        for(Repository r : repos) {
+            RemoteRepository remoteRepo = createRemoteRepository(r);
+            reposWithRemote.add(remoteRepo);
+        }
+        request = request.setRepositories(reposWithRemote);
+        VersionRangeResult result;
+        try {
+            result = this.system.resolveVersionRange(this.session, request);
+        } catch (VersionRangeResolutionException e) {
+            return false;
+        }
+        return result.getHighestVersion() != null;
     }
 }
