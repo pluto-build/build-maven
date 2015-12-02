@@ -1,4 +1,4 @@
-package build.pluto.buildmaven.util;
+package build.pluto.buildmaven;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,10 +14,7 @@ import org.eclipse.aether.connector.basic.BasicRepositoryConnectorFactory;
 import org.eclipse.aether.deployment.DeployRequest;
 import org.eclipse.aether.deployment.DeploymentException;
 import org.eclipse.aether.impl.DefaultServiceLocator;
-import org.eclipse.aether.repository.LocalArtifactRequest;
-import org.eclipse.aether.repository.LocalArtifactResult;
 import org.eclipse.aether.repository.LocalRepository;
-import org.eclipse.aether.repository.LocalRepositoryManager;
 import org.eclipse.aether.repository.RemoteRepository;
 import org.eclipse.aether.repository.RepositoryPolicy;
 import org.eclipse.aether.resolution.ArtifactResult;
@@ -30,7 +27,6 @@ import org.eclipse.aether.spi.connector.RepositoryConnectorFactory;
 import org.eclipse.aether.spi.connector.transport.TransporterFactory;
 import org.eclipse.aether.transport.file.FileTransporterFactory;
 import org.eclipse.aether.transport.http.HttpTransporterFactory;
-import org.eclipse.aether.util.artifact.JavaScopes;
 import org.eclipse.aether.util.artifact.SubArtifact;
 import org.eclipse.aether.util.version.GenericVersionScheme;
 import org.eclipse.aether.version.InvalidVersionSpecificationException;
@@ -117,8 +113,7 @@ public class MavenHandler {
         return locationList;
     }
 
-    private org.eclipse.aether.graph.Dependency createDependency(
-            Dependency dependency) {
+    private org.eclipse.aether.graph.Dependency createDependency(Dependency dependency) {
         DefaultArtifact aetherArtifact = createDefaultArtifact(dependency.artifactConstraint);
         List<org.eclipse.aether.graph.Exclusion> exclusions = new ArrayList<>();
         for (Exclusion e : dependency.exclusions) {
@@ -130,11 +125,11 @@ public class MavenHandler {
                         e.extension);
             exclusions.add(aetherExclusion);
         }
-        //TODO: Scope?
+
         return new org.eclipse.aether.graph.Dependency(
                 aetherArtifact,
-                JavaScopes.COMPILE,
-                false,
+                dependency.scope,
+                dependency.optional,
                 exclusions);
     }
 
@@ -190,21 +185,18 @@ public class MavenHandler {
                     policy.checksumPolicy);
     }
 
-    public String getHighestLocalVersion(
-            ArtifactConstraint artifactConstraint) {
-        String artifactPathString = local.getBasedir().getAbsolutePath()
+    public String getHighestLocalVersion(ArtifactConstraint artifactConstraint) {
+    	String artifactPathString = local.getBasedir().getAbsolutePath()
             + getPathToArtifactFolder(artifactConstraint);
-        AbsolutePath artifactPath = new AbsolutePath(artifactPathString);
+        File artifactPath = new File(artifactPathString);
         List<Version> versionList = new ArrayList<>();
         VersionConstraint versionConstraint =
             getVersionConstraint(artifactConstraint.versionConstraint);
         //get versions in constraint
-        for(RelativePath p : FileCommands.listFiles(artifactPath)) {
-            File f = p.getFile();
+        for(File f : artifactPath.listFiles()) {
             if(f.isDirectory()) {
                 Version version = getVersion(f.getName());
-                if(version != null
-                        && versionConstraint.containsVersion(version)) {
+                if(version != null && versionConstraint.containsVersion(version)) {
                     versionList.add(version);
                 }
             }

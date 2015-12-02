@@ -7,10 +7,10 @@ import build.pluto.buildmaven.dependency.MavenRemoteRequirement;
 import build.pluto.buildmaven.input.ArtifactConstraint;
 import build.pluto.buildmaven.input.Dependency;
 import build.pluto.buildmaven.input.MavenInput;
-import build.pluto.buildmaven.util.MavenHandler;
 import build.pluto.dependency.RemoteRequirement;
 import build.pluto.output.Out;
 import build.pluto.output.OutputPersisted;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,7 +28,7 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<F
 
     @Override
     protected String description(MavenInput input) {
-        return "Gets an Artifact from defined Maven repositories and Central.";
+    	return "Maven resolve " + input.dependencyList;
     }
 
     @Override

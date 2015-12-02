@@ -1,16 +1,7 @@
 package build.pluto.buildmaven;
 
-import build.pluto.builder.BuildManagers;
-import build.pluto.builder.BuildRequest;
-import build.pluto.builder.RequiredBuilderFailed;
-import build.pluto.buildmaven.input.*;
-import build.pluto.buildmaven.util.MavenHandler;
-import build.pluto.test.build.ScopedBuildTest;
-import build.pluto.test.build.ScopedPath;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.sugarj.common.FileCommands;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,8 +11,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import org.eclipse.aether.resolution.DependencyResolutionException;
+import org.junit.Before;
+import org.junit.Test;
+import org.sugarj.common.FileCommands;
+
+import build.pluto.builder.BuildManagers;
+import build.pluto.builder.BuildRequest;
+import build.pluto.buildmaven.input.Artifact;
+import build.pluto.buildmaven.input.ArtifactConstraint;
+import build.pluto.buildmaven.input.Dependency;
+import build.pluto.buildmaven.input.Exclusion;
+import build.pluto.buildmaven.input.MavenInput;
+import build.pluto.buildmaven.input.Repository;
+import build.pluto.test.build.ScopedBuildTest;
+import build.pluto.test.build.ScopedPath;
 
 public class MavenDependencyResolverTest extends ScopedBuildTest {
     @ScopedPath("")
@@ -56,7 +60,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
                 null);
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         dependencyList.add(dependency);
         build();
         String currentVersion = handler.getHighestLocalVersion(artifactConstraint);
@@ -69,7 +73,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
             String jarPath,
             String pomPath,
             Repository repo) throws Exception {
-        File dummyMaven = new File("src/test/resources/dummy-maven");
+        File dummyMaven = new File("testdata/dummy-maven");
         File jarLocation = new File(dummyMaven, jarPath);
         File pomLocation = new File(dummyMaven, pomPath);
         handler.deployArtifact(
@@ -112,7 +116,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
                 null);
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         dependencyList.add(dependency);
         build();
         build();
@@ -132,7 +136,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifactConstraint = changeVersionConstraint(artifactConstraint, "[1.0,)");
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         dependencyList.add(dependency);
         build();
         ArtifactConstraint newArtifactConstraint = changeVersionConstraint(artifactConstraint, "2.0");
@@ -167,7 +171,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifactConstraint = changeVersionConstraint(artifactConstraint, "[0.0,2.0)");
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         dependencyList.add(dependency);
         build();
         ArtifactConstraint newArtifactConstraint = changeVersionConstraint(artifactConstraint, "2.0");
@@ -222,8 +226,8 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Artifact artifact2 = MavenHandler.transformToArtifact(artifactConstraint2);
         deployArtifact(artifact2, "dummy-maven.jar", "pom3.xml", repoList.get(0));
         artifactConstraint1 = changeVersionConstraint(artifactConstraint1, "[0.0,)");
-        Dependency dependency1 = new Dependency(artifactConstraint1);
-        Dependency dependency2 = new Dependency(artifactConstraint2);
+        Dependency dependency1 = new Dependency(artifactConstraint1, 0l);
+        Dependency dependency2 = new Dependency(artifactConstraint2, 0l);
         dependencyList.add(dependency1);
         dependencyList.add(dependency2);
         build();
@@ -238,7 +242,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         deleteRepo(repoList.get(0));
     }
 
-    @Test(expected = RequiredBuilderFailed.class)
+    @Test(expected = DependencyResolutionException.class)
     public void testSingleExecutionWithWrongArtifact() throws Throwable {
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
@@ -249,7 +253,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifactConstraint = changeVersionConstraint(artifactConstraint, "[2.0,)");
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         dependencyList.add(dependency);
         build();
     }
