@@ -46,6 +46,14 @@ public class MavenInput implements Serializable {
             this.repositoryList = repositoryList;
             return this;
         }
+        
+        /**
+         * Add repository to use for resolving the artifacts.
+         */
+        public Builder addRepository(Repository repository) {
+            this.repositoryList.add(repository);
+            return this;
+        }
 
         /**
          * @returns MavenInput that got configured by this class.

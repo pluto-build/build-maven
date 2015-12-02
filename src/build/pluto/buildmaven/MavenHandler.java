@@ -1,4 +1,4 @@
-package build.pluto.buildmaven.util;
+package build.pluto.buildmaven;
 
 import java.io.File;
 import java.util.ArrayList;

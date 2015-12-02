@@ -24,7 +24,6 @@ import build.pluto.buildmaven.input.Dependency;
 import build.pluto.buildmaven.input.Exclusion;
 import build.pluto.buildmaven.input.MavenInput;
 import build.pluto.buildmaven.input.Repository;
-import build.pluto.buildmaven.util.MavenHandler;
 import build.pluto.test.build.ScopedBuildTest;
 import build.pluto.test.build.ScopedPath;
 
@@ -74,7 +73,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
             String jarPath,
             String pomPath,
             Repository repo) throws Exception {
-        File dummyMaven = new File("src/test/resources/dummy-maven");
+        File dummyMaven = new File("testdata/dummy-maven");
         File jarLocation = new File(dummyMaven, jarPath);
         File pomLocation = new File(dummyMaven, pomPath);
         handler.deployArtifact(

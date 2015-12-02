@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import build.pluto.builder.BuildUnitProvider;
+import build.pluto.buildmaven.MavenHandler;
 import build.pluto.buildmaven.input.ArtifactConstraint;
 import build.pluto.buildmaven.input.Repository;
-import build.pluto.buildmaven.util.MavenHandler;
 import build.pluto.dependency.RemoteRequirement;
 
 public class MavenRemoteRequirement extends RemoteRequirement {

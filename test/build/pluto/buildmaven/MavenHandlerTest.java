@@ -1,4 +1,4 @@
-package build.pluto.buildmaven.util;
+package build.pluto.buildmaven;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -14,6 +14,7 @@ import org.junit.AfterClass;
 import org.junit.Test;
 import org.sugarj.common.FileCommands;
 
+import build.pluto.buildmaven.MavenHandler;
 import build.pluto.buildmaven.input.ArtifactConstraint;
 import build.pluto.buildmaven.input.Dependency;
 import build.pluto.buildmaven.input.Exclusion;
