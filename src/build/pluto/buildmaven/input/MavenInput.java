@@ -30,6 +30,15 @@ public class MavenInput implements Serializable {
          * are saved
          * @param dependencyList the dependencies that you want to get resolved
          */
+        public Builder (List<Dependency> dependencyList) {
+            this(new File(System.getProperty("user.home"), ".m2/repository"), dependencyList);
+        }
+
+        /**
+         * @param localRepoLocation where the artifacts that get downloaded
+         * are saved
+         * @param dependencyList the dependencies that you want to get resolved
+         */
         public Builder (
                 File localRepoLocation,
                 List<Dependency> dependencyList) {
