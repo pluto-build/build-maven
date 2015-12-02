@@ -28,7 +28,7 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<F
 
     @Override
     protected String description(MavenInput input) {
-    	return "Resolve maven dependencies " + input.dependencyList;
+    	return "Maven resolve " + input.dependencyList;
     }
 
     @Override
