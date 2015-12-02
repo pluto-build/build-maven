@@ -28,7 +28,7 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<F
 
     @Override
     protected String description(MavenInput input) {
-        return "Gets an Artifact from defined Maven repositories and Central.";
+    	return "Resolve maven dependencies " + input.dependencyList;
     }
 
     @Override

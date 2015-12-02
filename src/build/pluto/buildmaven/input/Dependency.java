@@ -53,10 +53,6 @@ public class Dependency implements Serializable {
     }
 
     public String toString() {
-        StringBuffer sb = new StringBuffer();
-        sb.append(artifactConstraint.toString());
-        //exclusion is not important
-        sb.append(consistencyCheckInterval);
-        return sb.toString();
+        return artifactConstraint.toString();
     }
 }
