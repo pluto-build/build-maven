@@ -61,7 +61,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
                 null);
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         dependencyList.add(dependency);
         build();
         String currentVersion = handler.getHighestLocalVersion(artifactConstraint);
@@ -117,7 +117,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
                 null);
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         dependencyList.add(dependency);
         build();
         build();
@@ -137,7 +137,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifactConstraint = changeVersionConstraint(artifactConstraint, "[1.0,)");
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         dependencyList.add(dependency);
         build();
         ArtifactConstraint newArtifactConstraint = changeVersionConstraint(artifactConstraint, "2.0");
@@ -172,7 +172,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifactConstraint = changeVersionConstraint(artifactConstraint, "[0.0,2.0)");
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         dependencyList.add(dependency);
         build();
         ArtifactConstraint newArtifactConstraint = changeVersionConstraint(artifactConstraint, "2.0");
@@ -227,8 +227,8 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Artifact artifact2 = MavenHandler.transformToArtifact(artifactConstraint2);
         deployArtifact(artifact2, "dummy-maven.jar", "pom3.xml", repoList.get(0));
         artifactConstraint1 = changeVersionConstraint(artifactConstraint1, "[0.0,)");
-        Dependency dependency1 = new Dependency(artifactConstraint1);
-        Dependency dependency2 = new Dependency(artifactConstraint2);
+        Dependency dependency1 = new Dependency(artifactConstraint1, 0l);
+        Dependency dependency2 = new Dependency(artifactConstraint2, 0l);
         dependencyList.add(dependency1);
         dependencyList.add(dependency2);
         build();
@@ -254,7 +254,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
         deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
         artifactConstraint = changeVersionConstraint(artifactConstraint, "[2.0,)");
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         dependencyList.add(dependency);
         build();
     }

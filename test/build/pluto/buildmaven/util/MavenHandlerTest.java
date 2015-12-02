@@ -41,7 +41,7 @@ public class MavenHandlerTest {
                 "4.1.1.4",
                 null,
                 null);
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         List<File> jarLocations =
             handler.resolveDependencies(Arrays.asList(dependency), Arrays.<Repository>asList());
         assertEquals(9, jarLocations.size());
@@ -57,14 +57,14 @@ public class MavenHandlerTest {
                 "4.1.1.4",
                 null,
                 null);
-        Dependency dependency1 = new Dependency(artifactConstraint1);
+        Dependency dependency1 = new Dependency(artifactConstraint1, 0l);
         ArtifactConstraint artifactConstraint2 = new ArtifactConstraint(
                 "org.eclipse.jgit",
                 "org.eclipse.jgit",
                 "4.0.1.201506240215-r",
                 null,
                 null);
-        Dependency dependency2 = new Dependency(artifactConstraint2);
+        Dependency dependency2 = new Dependency(artifactConstraint2, 0l);
         List<File> jarLocations =
             handler.resolveDependencies(
                     Arrays.asList(dependency1, dependency2),
@@ -88,7 +88,7 @@ public class MavenHandlerTest {
                 null,
                 null);
         Dependency dependency =
-            new Dependency(artifactConstraint, Arrays.asList(exclusion));
+            new Dependency(artifactConstraint, Arrays.asList(exclusion), 0l);
         List<File> jarLocations =
             handler.resolveDependencies(Arrays.asList(dependency), Arrays.<Repository>asList());
         File jsonLocation =
@@ -121,7 +121,7 @@ public class MavenHandlerTest {
                 null);
         ArtifactConstraint artifactConstraint =
             new ArtifactConstraint("build.pluto", "pluto", "1.6.0-SNAPSHOT", null, null);
-        Dependency dependency = new Dependency(artifactConstraint);
+        Dependency dependency = new Dependency(artifactConstraint, 0l);
         List<File> jarLocations =
             handler.resolveDependencies(Arrays.asList(dependency), Arrays.asList(repo));
         assertEquals(5, jarLocations.size());
@@ -146,7 +146,7 @@ public class MavenHandlerTest {
         String artifactID = "android";
         List<Repository> repos = new ArrayList<>();
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(groupID, artifactID, "4.0.1.2", null, null);
-        Dependency dep = new Dependency(artifactConstraint);
+        Dependency dep = new Dependency(artifactConstraint, 0l);
         artifactConstraint =
             new ArtifactConstraint(groupID, artifactID, "[0,)", null, null);
         String newestVersion = handler.getHighestLocalVersion(artifactConstraint);
@@ -162,7 +162,7 @@ public class MavenHandlerTest {
         String version = "4.1.1.4";
         List<Repository> repos = new ArrayList<>();
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(groupID, artifactID, version, null, null);
-        Dependency dep = new Dependency(artifactConstraint);
+        Dependency dep = new Dependency(artifactConstraint, 0l);
         handler.resolveDependencies(Arrays.asList(dep), repos);
         String newestVersion = handler.getHighestLocalVersion(artifactConstraint);
         assertEquals("4.1.1.4", newestVersion);
