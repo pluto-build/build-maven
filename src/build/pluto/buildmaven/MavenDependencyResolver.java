@@ -1,8 +1,14 @@
 package build.pluto.buildmaven;
 
+import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import build.pluto.builder.Builder;
 import build.pluto.builder.BuilderFactory;
-import build.pluto.builder.BuilderFactoryFactory;
 import build.pluto.buildmaven.dependency.MavenRemoteRequirement;
 import build.pluto.buildmaven.input.ArtifactConstraint;
 import build.pluto.buildmaven.input.Dependency;
@@ -11,16 +17,21 @@ import build.pluto.dependency.RemoteRequirement;
 import build.pluto.output.Out;
 import build.pluto.output.OutputPersisted;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<File>>> {
 
-    public static BuilderFactory<MavenInput, Out<ArrayList<File>>, MavenDependencyResolver> factory
-        = BuilderFactoryFactory.of(MavenDependencyResolver.class, MavenInput.class);
+    public static BuilderFactory<MavenInput, Out<ArrayList<File>>, MavenDependencyResolver> factory = new BuilderFactory<MavenInput, Out<ArrayList<File>>, MavenDependencyResolver>() {
+		private static final long serialVersionUID = -6191333145182092802L;
+
+		@Override
+		public MavenDependencyResolver makeBuilder(MavenInput input) {
+			return new MavenDependencyResolver(input);
+		}
+
+		@Override
+		public boolean isOverlappingGeneratedFileCompatible(File overlap, Serializable input, BuilderFactory<?, ?, ?> otherFactory, Serializable otherInput) {
+			return this.getClass().isInstance(otherFactory);
+		}
+	};
 
     public MavenDependencyResolver(MavenInput input) {
         super(input);
