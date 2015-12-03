@@ -7,6 +7,9 @@ import org.eclipse.aether.repository.RepositoryPolicy;
 public class Repository implements Serializable {
     private static final long serialVersionUID = 4329409646442649789L;
 
+    public final static Policy ENABLED_DEFAULT_POLICY = new Policy(true, "warn");
+    public final static Policy DISABLED_DEFAULT_POLICY = new Policy(false, "warn");
+    
     public final String id;
     public final String url;
     public final String layout;
@@ -14,7 +17,7 @@ public class Repository implements Serializable {
     public final Policy snapshotPolicy;
     public final Policy releasePolicy;
 
-    public class Policy {
+    public static class Policy {
         public final boolean enabled;
         // this field gets covered by the checkConsistencyInterval in
         // RemoteRequirement, therefore everytime the dependencies get
