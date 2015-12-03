@@ -33,7 +33,7 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<F
 
     @Override
     public File persistentPath(MavenInput input) {
-        return new File(input.localRepoLocation, "maven.dep");
+        return new File(input.localRepoLocation, ".pluto-deps/" + input.repositoryList.hashCode() + ":" + input.dependencyList.hashCode() + ".dep");
     }
 
     @Override
