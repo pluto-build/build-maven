@@ -3,6 +3,7 @@ package build.pluto.buildmaven.input;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class MavenInput implements Serializable {
@@ -14,8 +15,8 @@ public class MavenInput implements Serializable {
 
     private MavenInput(Builder builder) {
         this.localRepoLocation = builder.localRepoLocation;
-        this.dependencyList = builder.dependencyList;
-        this.repositoryList = builder.repositoryList;
+        this.dependencyList = Collections.unmodifiableList(builder.dependencyList);
+        this.repositoryList = Collections.unmodifiableList(builder.repositoryList);
     }
 
     public static class Builder {
@@ -26,24 +27,18 @@ public class MavenInput implements Serializable {
         private List<Repository> repositoryList;
 
         /**
-         * @param localRepoLocation where the artifacts that get downloaded
-         * are saved
-         * @param dependencyList the dependencies that you want to get resolved
+         * @param localRepoLocation where the artifacts that get downloaded are saved
          */
-        public Builder (List<Dependency> dependencyList) {
-            this(new File(System.getProperty("user.home"), ".m2/repository"), dependencyList);
+        public Builder () {
+            this(new File(System.getProperty("user.home"), ".m2/repository"));
         }
 
         /**
-         * @param localRepoLocation where the artifacts that get downloaded
-         * are saved
-         * @param dependencyList the dependencies that you want to get resolved
+         * @param localRepoLocation where the artifacts that get downloaded are saved
          */
-        public Builder (
-                File localRepoLocation,
-                List<Dependency> dependencyList) {
+        public Builder (File localRepoLocation) {
             this.localRepoLocation = localRepoLocation;
-            this.dependencyList = dependencyList;
+            this.dependencyList = new ArrayList<>();
             this.repositoryList = new ArrayList<>();
         }
 
@@ -61,6 +56,23 @@ public class MavenInput implements Serializable {
          */
         public Builder addRepository(Repository repository) {
             this.repositoryList.add(repository);
+            return this;
+        }
+        
+        /**
+         * Set repositories to use for resolving the artifacts.
+         * @param repositoryList list of repositories
+         */
+        public Builder setDependencyList(List<Dependency> dependencyList) {
+            this.dependencyList = dependencyList;
+            return this;
+        }
+        
+        /**
+         * Add repository to use for resolving the artifacts.
+         */
+        public Builder addDependency(Dependency dependency) {
+            this.dependencyList.add(dependency);
             return this;
         }
 
