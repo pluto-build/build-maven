@@ -41,7 +41,6 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         Repository repo = new Repository(
                 "test-repo",
                 "file://" + workingDir.getAbsolutePath() + "/repository",
-                "test-repo",
                 "default",
                 null,
                 null);

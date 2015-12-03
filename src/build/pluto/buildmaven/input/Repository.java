@@ -1,15 +1,14 @@
 package build.pluto.buildmaven.input;
 
-import org.eclipse.aether.repository.RepositoryPolicy;
-
 import java.io.Serializable;
+
+import org.eclipse.aether.repository.RepositoryPolicy;
 
 public class Repository implements Serializable {
     private static final long serialVersionUID = 4329409646442649789L;
 
     public final String id;
     public final String url;
-    public final String name;
     public final String layout;
 
     public final Policy snapshotPolicy;
@@ -42,20 +41,17 @@ public class Repository implements Serializable {
     /**
      * @param id id of the repository
      * @param url location of the repository
-     * @param name name of the repository
      * @param layout default or legacy (Maven 1.x)
      * @param snapshotPolicy policy for snapshots
      * @param releasePolicy policy for releases
      */
     public Repository(String id,
             String url,
-            String name,
             String layout,
             Policy snapshotPolicy,
             Policy releasePolicy) {
         this.id = id;
         this.url = url;
-        this.name = name;
         this.layout = layout;
         this.snapshotPolicy = snapshotPolicy;
         this.releasePolicy = releasePolicy;

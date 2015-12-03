@@ -14,7 +14,6 @@ import org.junit.AfterClass;
 import org.junit.Test;
 import org.sugarj.common.FileCommands;
 
-import build.pluto.buildmaven.MavenHandler;
 import build.pluto.buildmaven.input.ArtifactConstraint;
 import build.pluto.buildmaven.input.Dependency;
 import build.pluto.buildmaven.input.Exclusion;
@@ -114,9 +113,7 @@ public class MavenHandlerTest {
         MavenHandler handler = new MavenHandler(localRepo);
         Repository repo = new Repository(
                 "pluto-build",
-                "https://raw.githubusercontent.com/pluto-build/"
-                + "pluto-build.github.io/master/mvnrepository/",
-                "",
+                "https://raw.githubusercontent.com/pluto-build/pluto-build.github.io/master/mvnrepository/",
                 "default",
                 null,
                 null);

@@ -33,9 +33,6 @@ import org.eclipse.aether.version.InvalidVersionSpecificationException;
 import org.eclipse.aether.version.Version;
 import org.eclipse.aether.version.VersionConstraint;
 import org.eclipse.aether.version.VersionScheme;
-import org.sugarj.common.FileCommands;
-import org.sugarj.common.path.AbsolutePath;
-import org.sugarj.common.path.RelativePath;
 
 import build.pluto.buildmaven.input.Artifact;
 import build.pluto.buildmaven.input.ArtifactConstraint;
