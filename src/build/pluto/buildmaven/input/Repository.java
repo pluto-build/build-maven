@@ -17,8 +17,10 @@ public class Repository implements Serializable {
     public final Policy snapshotPolicy;
     public final Policy releasePolicy;
 
-    public static class Policy {
-        public final boolean enabled;
+    public static class Policy implements Serializable {
+        private static final long serialVersionUID = -5710051042359199576L;
+        
+		public final boolean enabled;
         // this field gets covered by the checkConsistencyInterval in
         // RemoteRequirement, therefore everytime the dependencies get
         // resolved it needs to be checked.
