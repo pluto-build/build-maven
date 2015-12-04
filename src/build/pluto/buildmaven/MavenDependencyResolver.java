@@ -3,6 +3,7 @@ package build.pluto.buildmaven;
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +18,9 @@ import build.pluto.dependency.RemoteRequirement;
 import build.pluto.output.Out;
 import build.pluto.output.OutputPersisted;
 
-public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<File>>> {
+public class MavenDependencyResolver extends Builder<MavenInput, Out<List<File>>> {
 
-    public static BuilderFactory<MavenInput, Out<ArrayList<File>>, MavenDependencyResolver> factory = new BuilderFactory<MavenInput, Out<ArrayList<File>>, MavenDependencyResolver>() {
+    public static BuilderFactory<MavenInput, Out<List<File>>, MavenDependencyResolver> factory = new BuilderFactory<MavenInput, Out<List<File>>, MavenDependencyResolver>() {
 		private static final long serialVersionUID = -6191333145182092802L;
 
 		@Override
@@ -48,7 +49,7 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<F
     }
 
     @Override
-    protected Out<ArrayList<File>> build(MavenInput input) throws Throwable {
+    protected Out<List<File>> build(MavenInput input) throws Throwable {
         Map<Long, List<ArtifactConstraint>> dependencyGroups = new HashMap<>();
         for (Dependency dep : input.dependencyList) {
             if (!dependencyGroups.containsKey(dep.consistencyCheckInterval)) {
@@ -79,6 +80,6 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<ArrayList<F
         for(File f : artifactLocations) {
             this.provide(f);
         }
-        return OutputPersisted.of(artifactLocations);
+        return OutputPersisted.of(Collections.unmodifiableList(artifactLocations));
     }
 }
