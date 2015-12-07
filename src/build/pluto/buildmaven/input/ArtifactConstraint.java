@@ -47,4 +47,65 @@ public class ArtifactConstraint implements Serializable {
         sb.append(versionConstraint);
         return sb.toString();
     }
+
+	/**
+     * Generated using Eclipse.
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ ((artifactID == null) ? 0 : artifactID.hashCode());
+		result = prime * result
+				+ ((classifier == null) ? 0 : classifier.hashCode());
+		result = prime * result
+				+ ((extension == null) ? 0 : extension.hashCode());
+		result = prime * result + ((groupID == null) ? 0 : groupID.hashCode());
+		result = prime
+				* result
+				+ ((versionConstraint == null) ? 0 : versionConstraint
+						.hashCode());
+		return result;
+	}
+
+	/**
+     * Generated using Eclipse.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		ArtifactConstraint other = (ArtifactConstraint) obj;
+		if (artifactID == null) {
+			if (other.artifactID != null)
+				return false;
+		} else if (!artifactID.equals(other.artifactID))
+			return false;
+		if (classifier == null) {
+			if (other.classifier != null)
+				return false;
+		} else if (!classifier.equals(other.classifier))
+			return false;
+		if (extension == null) {
+			if (other.extension != null)
+				return false;
+		} else if (!extension.equals(other.extension))
+			return false;
+		if (groupID == null) {
+			if (other.groupID != null)
+				return false;
+		} else if (!groupID.equals(other.groupID))
+			return false;
+		if (versionConstraint == null) {
+			if (other.versionConstraint != null)
+				return false;
+		} else if (!versionConstraint.equals(other.versionConstraint))
+			return false;
+		return true;
+	}
 }
