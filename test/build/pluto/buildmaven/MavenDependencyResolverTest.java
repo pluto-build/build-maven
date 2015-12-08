@@ -242,7 +242,7 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
     public void testSingleExecutionWithWrongArtifact() throws Throwable {
         ArtifactConstraint artifactConstraint = new ArtifactConstraint(
                 "build.pluto",
-                "dummy-maven",
+                "DOES-NOT-EXIST-maven",
                 "1.0",
                 null,
                 null);
