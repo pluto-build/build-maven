@@ -75,7 +75,7 @@ public class MavenHandlerTest extends ScopedBuildTest {
     public void testResolveDependenciesOnOtherRepo() throws Exception {
         MavenHandler handler = new MavenHandler(localRepo);
         Repository repo = new Repository(
-                "pluto-build",
+                "sugar-lang",
                 "https://raw.githubusercontent.com/sugar-lang/sugar-lang.github.io/master/mvnrepository/",
                 "default",
                 null,
