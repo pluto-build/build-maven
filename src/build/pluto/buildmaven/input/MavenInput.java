@@ -26,22 +26,20 @@ public class MavenInput implements Serializable {
 
         private List<Repository> repositoryList;
 
-        /**
-         * @param localRepoLocation where the artifacts that get downloaded are saved
-         */
-        public Builder () {
-            this(new File(System.getProperty("user.home"), ".m2/repository"));
-        }
-
-        /**
-         * @param localRepoLocation where the artifacts that get downloaded are saved
-         */
-        public Builder (File localRepoLocation) {
-            this.localRepoLocation = localRepoLocation;
+        public Builder() {
             this.dependencyList = new ArrayList<>();
             this.repositoryList = new ArrayList<>();
         }
 
+        /**
+         * @param localRepoLocation where the artifacts that get downloaded are saved
+         * @return 
+         */
+        public Builder setLocalRepoLocation(File localRepoLocation) {
+			this.localRepoLocation = localRepoLocation;
+			return this;
+		}
+        
         /**
          * Set repositories to use for resolving the artifacts.
          * @param repositoryList list of repositories

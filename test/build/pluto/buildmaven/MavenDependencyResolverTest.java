@@ -80,9 +80,10 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
     }
 
     private void build() throws Throwable {
-        MavenInput input = 
-        		new MavenInput.Builder(localRepoLocation)
-        		.setRepositoryList(this.repoList)
+        MavenInput input = new MavenInput
+        		.Builder()
+        		.setLocalRepoLocation(localRepoLocation)
+        		.setRepositoryList(repoList)
         		.setDependencyList(dependencyList)
         		.build();
         BuildRequest<?, ?, ?, ?> buildRequest =

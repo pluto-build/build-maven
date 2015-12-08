@@ -41,6 +41,9 @@ import build.pluto.buildmaven.input.Exclusion;
 import build.pluto.buildmaven.input.Repository;
 
 public class MavenHandler {
+	
+	public static final File DEFAULT_LOCAL = new File(System.getProperty("user.home"), ".m2/repository");
+	
     private RemoteRepository remote;
     private LocalRepository local;
     private RepositorySystem system;
