@@ -52,12 +52,10 @@ public class MavenHandler {
             String remoteType,
             String remoteURL) {
         this.local = new LocalRepository(localRepoLocation);
-        this.remote =
-            new RemoteRepository.Builder(remoteID, remoteType, remoteURL).build();
+        this.remote = new RemoteRepository.Builder(remoteID, remoteType, remoteURL).build();
         this.system = this.newRepositorySystem();
         this.session = MavenRepositorySystemUtils.newSession();
-        this.session.setLocalRepositoryManager(
-                system.newLocalRepositoryManager(session, local));
+    	this.session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, local));
     }
 
     public MavenHandler(File localRepoLocation) {
@@ -65,11 +63,10 @@ public class MavenHandler {
         this.remote = new RemoteRepository.Builder(
                 "central",
                 "default",
-                "http://central.maven.org/maven2/").build();
+                "https://repo1.maven.org/maven2/").build();
         this.system = this.newRepositorySystem();
         this.session = MavenRepositorySystemUtils.newSession();
-        this.session.setLocalRepositoryManager(
-                system.newLocalRepositoryManager(session, local));
+    	this.session.setLocalRepositoryManager(system.newLocalRepositoryManager(session, local));
     }
 
     private RepositorySystem newRepositorySystem() {
@@ -271,12 +268,8 @@ public class MavenHandler {
             File typeLocation,
             File pomLocation,
             Repository repo) throws DeploymentException {
-        org.eclipse.aether.artifact.Artifact typeArtifact =
-            this.createDefaultArtifact(artifact);
-        typeArtifact = typeArtifact.setFile(typeLocation);
-        org.eclipse.aether.artifact.Artifact pomArtifact =
-            new SubArtifact(typeArtifact, "", "pom");
-        pomArtifact = pomArtifact.setFile(pomLocation);
+        org.eclipse.aether.artifact.Artifact typeArtifact = this.createDefaultArtifact(artifact).setFile(typeLocation);
+        org.eclipse.aether.artifact.Artifact pomArtifact = new SubArtifact(typeArtifact, "", "pom").setFile(pomLocation);
 
         DeployRequest deployRequest = new DeployRequest();
         deployRequest = deployRequest

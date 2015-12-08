@@ -71,15 +71,12 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
             Artifact artifact,
             String jarPath,
             String pomPath,
-            Repository repo) throws Exception {
+            Repository repo) throws Throwable {
         File dummyMaven = new File("testdata/dummy-maven");
         File jarLocation = new File(dummyMaven, jarPath);
         File pomLocation = new File(dummyMaven, pomPath);
-        handler.deployArtifact(
-                artifact,
-                jarLocation,
-                pomLocation,
-                repo);
+        MavenDeployer.Input input = new MavenDeployer.Input(artifact, jarLocation, null, pomLocation, null, localRepoLocation, repo);
+        BuildManagers.build(new BuildRequest<>(MavenDeployer.factory, input));
     }
 
     private void build() throws Throwable {
