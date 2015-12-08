@@ -1,6 +1,7 @@
 package build.pluto.buildmaven;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.io.File;
@@ -37,10 +38,9 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
 
     @Before
     public void init() {
-        File workingDir = new File("");
         Repository repo = new Repository(
                 "test-repo",
-                "file://" + workingDir.getAbsolutePath() + "/repository",
+                "file://" + localRepoLocation.getAbsolutePath() + "/repository",
                 "default",
                 null,
                 null);
@@ -77,6 +77,21 @@ public class MavenDependencyResolverTest extends ScopedBuildTest {
         File pomLocation = new File(dummyMaven, pomPath);
         MavenDeployer.Input input = new MavenDeployer.Input(artifact, jarLocation, null, pomLocation, null, localRepoLocation, repo);
         BuildManagers.build(new BuildRequest<>(MavenDeployer.factory, input));
+    }
+    
+    @Test
+    public void testDeploy() throws Throwable {
+    	ArtifactConstraint artifactConstraint = new ArtifactConstraint(
+                "build.pluto",
+                "dummy-maven",
+                "1.0",
+                null,
+                null);
+        Artifact artifact = MavenHandler.transformToArtifact(artifactConstraint);
+        deployArtifact(artifact, "dummy-maven.jar", "pom.xml", repoList.get(0));
+        File localRepo = new File(repoList.get(0).url.substring("file://".length()));
+        File deployedJar = new File(localRepo, "build/pluto/dummy-maven/1.0/dummy-maven-1.0.jar");
+        assertTrue(deployedJar + " should exist", deployedJar.exists());
     }
 
     private void build() throws Throwable {
