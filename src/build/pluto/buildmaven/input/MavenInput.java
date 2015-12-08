@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import build.pluto.buildmaven.MavenHandler;
+
 public class MavenInput implements Serializable {
     private static final long serialVersionUID = -813263267417646266L;
 
@@ -14,7 +16,7 @@ public class MavenInput implements Serializable {
     public final List<Repository> repositoryList;
 
     private MavenInput(Builder builder) {
-        this.localRepoLocation = builder.localRepoLocation;
+        this.localRepoLocation = builder.localRepoLocation != null ? builder.localRepoLocation : MavenHandler.DEFAULT_LOCAL;
         this.dependencyList = Collections.unmodifiableList(builder.dependencyList);
         this.repositoryList = Collections.unmodifiableList(builder.repositoryList);
     }
