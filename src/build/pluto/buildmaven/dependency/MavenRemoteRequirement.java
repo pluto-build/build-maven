@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import build.pluto.builder.BuildUnitProvider;
 import build.pluto.buildmaven.MavenHandler;
 import build.pluto.buildmaven.input.ArtifactConstraint;
 import build.pluto.buildmaven.input.Repository;
@@ -74,11 +73,6 @@ public class MavenRemoteRequirement extends RemoteRequirement {
             }
         }
         return true;
-    }
-
-    @Override
-    public boolean tryMakeConsistent(BuildUnitProvider manager) throws IOException {
-        return this.isConsistent();
     }
 
     @Override
