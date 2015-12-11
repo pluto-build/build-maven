@@ -12,14 +12,14 @@ public class MavenPackagerInput implements Serializable {
   public final File workingDir;
   public final boolean verbose;
   public final Origin pomOrigin;
-  public final Origin classOrigin;
+  public final Origin sourceOrigin;
 
   private MavenPackagerInput(Builder builder){
     this.workingDir = builder.workingDir;
     this.jarName = builder.jarName;
     this.verbose = builder.verbose;
     this.pomOrigin = builder.pomOrigin;
-    this.classOrigin = builder.classOrigin;
+    this.sourceOrigin = builder.sourceOrigin;
   }
 
   public static Builder Builder() { return new Builder(); }
@@ -28,7 +28,7 @@ public class MavenPackagerInput implements Serializable {
     private File workingDir;
     private String jarName;
     private Origin pomOrigin;
-    private Origin classOrigin;
+    private Origin sourceOrigin;
     private boolean verbose = false;
 
     public MavenPackagerInput get() {
@@ -55,8 +55,8 @@ public class MavenPackagerInput implements Serializable {
       return this;
     }
 
-    public Builder setClassOrigin(Origin classOrigin) {
-      this.classOrigin = classOrigin;
+    public Builder setSourceOrigin(Origin sourceOrigin) {
+      this.sourceOrigin = sourceOrigin;
       return this;
     }
   }

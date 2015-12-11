@@ -37,7 +37,7 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
   @Override
   protected Out<ExecutionResult> build(MavenPackagerInput input) throws Throwable {
     String command = String.format("mvn package --batch-mode -DskipTests -Djar.finalName=%s -X", input.jarName);
-    requireBuild(input.classOrigin);
+    requireBuild(input.sourceOrigin);
     requireBuild(input.pomOrigin);
 
     try {
