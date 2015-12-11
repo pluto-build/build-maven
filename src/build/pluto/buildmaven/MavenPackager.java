@@ -8,11 +8,14 @@ import build.pluto.output.Out;
 import build.pluto.output.OutputPersisted;
 import build.pluto.stamp.LastModifiedStamper;
 
+import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.sugarj.common.Exec;
 import org.sugarj.common.Exec.ExecutionError;
 import org.sugarj.common.Exec.ExecutionResult;
+import org.sugarj.common.FileCommands;
 
 import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,13 +38,36 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
   }
 
   @Override
-  protected Out<ExecutionResult> build(MavenPackagerInput input) throws Throwable {
-    String command = String.format("mvn package --batch-mode -DskipTests -Djar.finalName=%s -X", input.jarName);
+  protected Out<ExecutionResult> build(MavenPackagerInput input)
+      throws Throwable {
+    List<String> command = new ArrayList<>();
+    command.add("mvn");
+    command.add("package");
+    command.add("--batch-mode");
+    if(input.skipTests)
+      command.add("-DskipTests");
+
+    command.add("-Djar.finalName=" + input.jarName);
+    command.add("-X"); // debug output to track required files
+
     requireBuild(input.sourceOrigin);
     requireBuild(input.pomOrigin);
 
+    // need to search them because maven debug does only prints stale files
+    // builder would require not in the first but in the second execution
+    FileFilter javaFilter = new SuffixFileFilter(".java");
+    List<File> sourceFiles = FileCommands.listFilesRecursive(input.sourceDir, javaFilter);
+    for (File f : sourceFiles)
+      require(f, LastModifiedStamper.instance);
+
+    if (!input.skipTests) {
+      List<File> testFiles = FileCommands.listFilesRecursive(input.testDir, javaFilter);
+      for (File f : testFiles)
+        require(f, LastModifiedStamper.instance);
+    }
+
     try {
-      ExecutionResult result = Exec.run(input.workingDir, command.split(" "));
+      ExecutionResult result = Exec.run(input.workingDir, command.toArray(new String[command.size()]));
       String[] outMsgs = installDependencies(result.outMsgs, !input.verbose);
       provide(new File(input.workingDir, "target/" + input.jarName + ".jar"));
       return OutputPersisted.of(new Exec.ExecutionResult(result.cmds, outMsgs, result.errMsgs));
@@ -51,28 +77,28 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
     }
   }
 
-  private final String filePrefix = "[DEBUG] adding entry ";
+  private final String classfilePrefix = "[DEBUG] adding entry ";
   private final String dirPrefix = "[DEBUG] adding directory ";
   private final String infoPrefix = "[INFO]";
+
   private String[] installDependencies(String[] outMsgs, boolean removeVerbose) {
     List<String> out = new ArrayList<>();
-    for(String line : outMsgs) {
+    for (String line : outMsgs) {
       boolean lineIsVerbose = true;
-      if (line.startsWith(filePrefix)) {
-        String fileName = line.substring(filePrefix.length());
+      if (line.startsWith(classfilePrefix)) {
+        String fileName = line.substring(classfilePrefix.length());
         require(new File(fileName), LastModifiedStamper.instance);
-      } else if(line.startsWith(dirPrefix)) {
+      } else if (line.startsWith(dirPrefix)) {
         // TODO should we require directories?
         // dont think so because we require the files with the directories already
       } else if (line.startsWith(infoPrefix))
         lineIsVerbose = false;
 
-      if (removeVerbose && !lineIsVerbose) {
+      if (removeVerbose && !lineIsVerbose)
         out.add(line);
-      }
     }
 
-    if(removeVerbose)
+    if (removeVerbose)
       return out.toArray(new String[out.size()]);
     else
       return outMsgs;

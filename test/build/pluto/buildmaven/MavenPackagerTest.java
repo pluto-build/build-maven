@@ -22,8 +22,7 @@ public class MavenPackagerTest extends ScopedBuildTest {
 	public void testSimplePackage() throws Throwable {
 		MavenPackagerInput input = new MavenPackagerInput.Builder()
 				.setJarName("test")
-				.setWorkingDir(rootDir)
-				.setVerbose(true)
+				.setWorkingDir(rootDir.getParentFile())
 				.get();
 		ExecutionResult result = pack(input);
 	}
