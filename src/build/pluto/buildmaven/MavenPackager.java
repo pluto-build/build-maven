@@ -78,7 +78,6 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
   }
 
   private final String classfilePrefix = "[DEBUG] adding entry ";
-  private final String dirPrefix = "[DEBUG] adding directory ";
   private final String infoPrefix = "[INFO]";
 
   // TODO what about classpath dependencies?
@@ -89,9 +88,6 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
       if (line.startsWith(classfilePrefix)) {
         String fileName = line.substring(classfilePrefix.length());
         require(new File(fileName), LastModifiedStamper.instance);
-      } else if (line.startsWith(dirPrefix)) {
-        // TODO should we require directories?
-        // dont think so because we require the files with the directories already
       } else if (line.startsWith(infoPrefix))
         lineIsVerbose = false;
 
