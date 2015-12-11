@@ -1,12 +1,11 @@
 package build.pluto.buildmaven;
 
-import build.pluto.builder.Builder;
-import build.pluto.builder.BuilderFactory;
-import build.pluto.builder.BuilderFactoryFactory;
-import build.pluto.buildmaven.input.MavenPackagerInput;
-import build.pluto.output.Out;
-import build.pluto.output.OutputPersisted;
-import build.pluto.stamp.LastModifiedStamper;
+import java.io.File;
+import java.io.FileFilter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.io.filefilter.SuffixFileFilter;
 import org.sugarj.common.Exec;
@@ -14,12 +13,13 @@ import org.sugarj.common.Exec.ExecutionError;
 import org.sugarj.common.Exec.ExecutionResult;
 import org.sugarj.common.FileCommands;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import build.pluto.builder.Builder;
+import build.pluto.builder.BuilderFactory;
+import build.pluto.builder.BuilderFactoryFactory;
+import build.pluto.buildmaven.input.MavenPackagerInput;
+import build.pluto.output.Out;
+import build.pluto.output.OutputPersisted;
+import build.pluto.stamp.LastModifiedStamper;
 
 public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResult>> {
   public static BuilderFactory<MavenPackagerInput, Out<ExecutionResult>, MavenPackager> factory = BuilderFactoryFactory.of(MavenPackager.class, MavenPackagerInput.class);
