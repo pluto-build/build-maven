@@ -53,8 +53,8 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
     requireBuild(input.sourceOrigin);
     requireBuild(input.pomOrigin);
 
-    // need to search them because maven debug does only prints stale files
-    // builder would require not in the first but in the second execution
+    // need to search them because maven debug does only print stale files
+    // builder would not require in the first but in the second execution
     FileFilter javaFilter = new SuffixFileFilter(".java");
     List<File> sourceFiles = FileCommands.listFilesRecursive(input.sourceDir, javaFilter);
     for (File f : sourceFiles)
