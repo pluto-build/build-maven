@@ -20,7 +20,8 @@ public class MavenPackagerTest extends ScopedBuildTest {
 
 	@Test
 	public void testSimplePackage() throws Throwable {
-		MavenPackagerInput input = new MavenPackagerInput.Builder()
+		MavenPackagerInput input = new MavenPackagerInput
+				.Builder()
 				.setJarName("test")
 				.setWorkingDir(rootDir.getParentFile())
 				.get();
@@ -29,7 +30,8 @@ public class MavenPackagerTest extends ScopedBuildTest {
 
 	@Test
 	public void testDoubleExecution() throws Throwable {
-		MavenPackagerInput input = new MavenPackagerInput.Builder()
+		MavenPackagerInput input = new MavenPackagerInput
+				.Builder()
 				.setJarName("test")
 				.setWorkingDir(rootDir)
 				.get();
