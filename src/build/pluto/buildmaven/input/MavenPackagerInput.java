@@ -1,4 +1,4 @@
-package build.pluto.buildmaven;
+package build.pluto.buildmaven.input;
 
 import build.pluto.dependency.Origin;
 
