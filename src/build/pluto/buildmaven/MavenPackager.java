@@ -81,6 +81,7 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
   private final String dirPrefix = "[DEBUG] adding directory ";
   private final String infoPrefix = "[INFO]";
 
+  // TODO what about classpath dependencies?
   private String[] installDependencies(String[] outMsgs, boolean removeVerbose) {
     List<String> out = new ArrayList<>();
     for (String line : outMsgs) {
