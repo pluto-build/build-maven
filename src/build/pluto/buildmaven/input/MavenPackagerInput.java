@@ -28,6 +28,11 @@ public class MavenPackagerInput implements Serializable {
     this.skipTests = builder.skipTests;
   }
 
+  @Override
+  public String toString() {
+    return "MavenPackagerInput(workingDir=" + workingDir + ", verbose=" + verbose + ", skipTests=" + skipTests + ", jarName=" + jarName + ")";
+  }
+
   public static Builder Builder() { return new Builder(); }
 
   public static class Builder {
