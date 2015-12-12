@@ -12,7 +12,7 @@ import org.sugarj.common.Exec.ExecutionResult;
 
 import java.io.File;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class MavenPackagerTest extends ScopedBuildTest {
 	@ScopedPath(value = "")
