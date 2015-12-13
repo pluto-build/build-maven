@@ -12,7 +12,6 @@ import org.sugarj.common.Exec;
 import org.sugarj.common.Exec.ExecutionError;
 import org.sugarj.common.Exec.ExecutionResult;
 import org.sugarj.common.FileCommands;
-import org.sugarj.common.Log;
 
 import build.pluto.builder.Builder;
 import build.pluto.builder.BuilderFactory;
@@ -76,10 +75,6 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
       return OutputPersisted.of(new Exec.ExecutionResult(result.cmds, outMsgs, result.errMsgs));
     } catch (ExecutionError e) {
       String[] outMsgs = installDependencies(e.outMsgs, !input.verbose);
-      Log.log.setLoggingLevel(Log.ALWAYS);
-      for (String line : outMsgs)
-        Log.log.log(line, Log.ALWAYS);
-
       throw e;
     }
   }

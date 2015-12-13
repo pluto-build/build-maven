@@ -7,15 +7,13 @@ import java.io.File;
 import org.junit.Before;
 import org.junit.Test;
 import org.sugarj.common.Exec;
-import org.sugarj.common.Exec.ExecutionResult;
+import org.sugarj.common.FileCommands;
 
-import build.pluto.builder.BuildManagers;
 import build.pluto.builder.BuildRequest;
 import build.pluto.buildmaven.input.MavenPackagerInput;
 import build.pluto.test.build.ScopedBuildTest;
 import build.pluto.test.build.ScopedPath;
 import build.pluto.test.build.TrackingBuildManager;
-import org.sugarj.common.FileCommands;
 
 public class MavenPackagerTest extends ScopedBuildTest {
 	@ScopedPath(value = "")
@@ -36,7 +34,6 @@ public class MavenPackagerTest extends ScopedBuildTest {
 		MavenPackagerInput input = new MavenPackagerInput
 				.Builder()
 				.setJarName("test")
-				.setVerbose(true)
 				.setSourceDir(rootDir)
 				.setWorkingDir(rootDir)
 				.get();
@@ -48,7 +45,6 @@ public class MavenPackagerTest extends ScopedBuildTest {
 		MavenPackagerInput input = new MavenPackagerInput
 				.Builder()
 				.setJarName("test")
-				.setVerbose(true)
 				.setSourceDir(rootDir)
 				.setWorkingDir(rootDir)
 				.get();
@@ -61,7 +57,6 @@ public class MavenPackagerTest extends ScopedBuildTest {
 		MavenPackagerInput input = new MavenPackagerInput
 				.Builder()
 				.setJarName("test")
-				.setVerbose(true)
 				.setSourceDir(rootDir)
 				.setWorkingDir(rootDir)
 				.get();
@@ -74,14 +69,14 @@ public class MavenPackagerTest extends ScopedBuildTest {
 		assertRun(input);
 	}
 
-	public void assertRun(MavenPackagerInput input) throws Throwable {
+	private void assertRun(MavenPackagerInput input) throws Throwable {
 		TrackingBuildManager m = new TrackingBuildManager();
 		m.require(new BuildRequest<>(MavenPackager.factory, input));
 		assertEquals(1, m.getRequiredInputs().size());
 		assertEquals(1, m.getExecutedInputs().size());
 	}
 
-	public void assertNoRun(MavenPackagerInput input) throws Throwable {
+	private void assertNoRun(MavenPackagerInput input) throws Throwable {
 		TrackingBuildManager m = new TrackingBuildManager();
 		m.require(new BuildRequest<>(MavenPackager.factory, input));
 		assertEquals(1, m.getRequiredInputs().size());
