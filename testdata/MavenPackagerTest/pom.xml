@@ -18,6 +18,7 @@
               </configuration>
             </plugin>
         </plugins>
+        <sourceDirectory>${project.basedir}</sourceDirectory>
     </build>
     <dependencies>
         <dependency>
