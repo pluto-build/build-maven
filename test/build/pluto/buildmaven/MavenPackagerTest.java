@@ -36,6 +36,7 @@ public class MavenPackagerTest extends ScopedBuildTest {
 		MavenPackagerInput input = new MavenPackagerInput
 				.Builder()
 				.setJarName("test")
+				.setVerbose(true)
 				.setSourceDir(rootDir)
 				.setWorkingDir(rootDir)
 				.get();
@@ -47,6 +48,7 @@ public class MavenPackagerTest extends ScopedBuildTest {
 		MavenPackagerInput input = new MavenPackagerInput
 				.Builder()
 				.setJarName("test")
+				.setVerbose(true)
 				.setSourceDir(rootDir)
 				.setWorkingDir(rootDir)
 				.get();
@@ -59,6 +61,7 @@ public class MavenPackagerTest extends ScopedBuildTest {
 		MavenPackagerInput input = new MavenPackagerInput
 				.Builder()
 				.setJarName("test")
+				.setVerbose(true)
 				.setSourceDir(rootDir)
 				.setWorkingDir(rootDir)
 				.get();
