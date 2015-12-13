@@ -12,6 +12,7 @@ import org.sugarj.common.Exec;
 import org.sugarj.common.Exec.ExecutionError;
 import org.sugarj.common.Exec.ExecutionResult;
 import org.sugarj.common.FileCommands;
+import org.sugarj.common.Log;
 
 import build.pluto.builder.Builder;
 import build.pluto.builder.BuilderFactory;
@@ -75,6 +76,10 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
       return OutputPersisted.of(new Exec.ExecutionResult(result.cmds, outMsgs, result.errMsgs));
     } catch (ExecutionError e) {
       String[] outMsgs = installDependencies(e.outMsgs, !input.verbose);
+      Log.log.setLoggingLevel(Log.ALWAYS);
+      for (String line : outMsgs)
+        Log.log.log(line, Log.ALWAYS);
+
       throw e;
     }
   }
@@ -83,11 +88,10 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
   private final String classpathPrefix = "[DEBUG]   (f) classpathElements = [";
   private final String infoPrefix = "[INFO]";
 
-  // TODO what about classpath dependencies?
   private String[] installDependencies(String[] outMsgs, boolean removeVerbose) {
     List<String> out = new ArrayList<>();
-
     Set<File> classpath = new HashSet<>();
+
     for (String line : outMsgs) {
       boolean lineIsVerbose = true;
       if (line.startsWith(classfilePrefix)) {
