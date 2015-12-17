@@ -49,6 +49,7 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
     if(input.skipTests)
       command.add("-DskipTests");
 
+    command.add("-Dmaven.compiler.verbose");
     command.add("-Djar.finalName=" + input.jarName);
     command.add("-X"); // debug output to track required files
 
