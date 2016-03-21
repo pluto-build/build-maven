@@ -1,9 +1,9 @@
 package build.pluto.buildmaven.input;
 
-import build.pluto.dependency.Origin;
-
 import java.io.File;
 import java.io.Serializable;
+
+import build.pluto.dependency.Origin;
 
 public class MavenPackagerInput implements Serializable {
   private static final long serialVersionUID = 3737339760071686995L;

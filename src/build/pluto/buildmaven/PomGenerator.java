@@ -6,8 +6,9 @@ import java.io.Serializable;
 import org.sugarj.common.FileCommands;
 
 import build.pluto.builder.Builder;
-import build.pluto.builder.BuilderFactory;
+import build.pluto.builder.factory.BuilderFactory;
 import build.pluto.buildmaven.input.Artifact;
+import build.pluto.executor.InputParser;
 import build.pluto.output.None;
 import build.pluto.stamp.FileHashStamper;
 
@@ -24,6 +25,11 @@ public class PomGenerator extends Builder<PomGenerator.Input, None> {
 		@Override
 		public boolean isOverlappingGeneratedFileCompatible(File overlap, Serializable input, BuilderFactory<?, ?, ?> otherFactory, Serializable otherInput) {
 			return this.getClass().isInstance(otherFactory);
+		}
+
+		@Override
+		public InputParser<Input> inputParser() {
+			return null;
 		}
 	};
 

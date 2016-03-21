@@ -14,8 +14,8 @@ import org.sugarj.common.Exec.ExecutionResult;
 import org.sugarj.common.FileCommands;
 
 import build.pluto.builder.Builder;
-import build.pluto.builder.BuilderFactory;
-import build.pluto.builder.BuilderFactoryFactory;
+import build.pluto.builder.factory.BuilderFactory;
+import build.pluto.builder.factory.BuilderFactoryFactory;
 import build.pluto.buildmaven.input.MavenPackagerInput;
 import build.pluto.output.Out;
 import build.pluto.output.OutputPersisted;

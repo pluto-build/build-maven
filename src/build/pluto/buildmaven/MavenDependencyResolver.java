@@ -9,12 +9,13 @@ import java.util.List;
 import java.util.Map;
 
 import build.pluto.builder.Builder;
-import build.pluto.builder.BuilderFactory;
+import build.pluto.builder.factory.BuilderFactory;
 import build.pluto.buildmaven.dependency.MavenRemoteRequirement;
 import build.pluto.buildmaven.input.ArtifactConstraint;
 import build.pluto.buildmaven.input.Dependency;
 import build.pluto.buildmaven.input.MavenInput;
 import build.pluto.dependency.RemoteRequirement;
+import build.pluto.executor.InputParser;
 import build.pluto.output.Out;
 import build.pluto.output.OutputPersisted;
 
@@ -31,6 +32,11 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<List<File>>
 		@Override
 		public boolean isOverlappingGeneratedFileCompatible(File overlap, Serializable input, BuilderFactory<?, ?, ?> otherFactory, Serializable otherInput) {
 			return this.getClass().isInstance(otherFactory);
+		}
+
+		@Override
+		public InputParser<MavenInput> inputParser() {
+			return null;
 		}
 	};
 
