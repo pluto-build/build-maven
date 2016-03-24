@@ -20,6 +20,7 @@ import build.pluto.buildmaven.input.MavenPackagerInput;
 import build.pluto.output.Out;
 import build.pluto.output.OutputPersisted;
 import build.pluto.stamp.LastModifiedStamper;
+import org.sugarj.common.StringCommands;
 
 public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResult>> {
   public static BuilderFactory<MavenPackagerInput, Out<ExecutionResult>, MavenPackager> factory = BuilderFactoryFactory.of(MavenPackager.class, MavenPackagerInput.class);
@@ -76,6 +77,8 @@ public class MavenPackager extends Builder<MavenPackagerInput, Out<ExecutionResu
       return OutputPersisted.of(new Exec.ExecutionResult(result.cmds, outMsgs, result.errMsgs));
     } catch (ExecutionError e) {
       String[] outMsgs = installDependencies(e.outMsgs, !input.verbose);
+      report(StringCommands.printListSeparated(e.outMsgs, "\n"));
+      reportError(StringCommands.printListSeparated(e.errMsgs, "\n"));
       throw e;
     }
   }
