@@ -25,28 +25,6 @@ public class MavenInputParserTest extends ScopedBuildTest {
   @ScopedPath("")
   private File workingDir;
 
-  @Test
-  public void printRefArtifact() throws Throwable {
-    MavenInput result = parse(new File(workingDir, "SingleArtifact.yml"), "test");
-    System.out.println(result.localRepoLocation);
-      for (Dependency dep : result.dependencyList) {
-        System.out.println(dep.artifactConstraint.groupID);
-        System.out.println(dep.artifactConstraint.artifactID);
-        System.out.println(dep.artifactConstraint.versionConstraint);
-        System.out.println(dep.artifactConstraint.classifier);
-        System.out.println(dep.artifactConstraint.extension);
-        System.out.println(dep.consistencyCheckInterval);
-        System.out.println(dep.scope);
-        System.out.println(dep.optional);
-        for (Exclusion ex : dep.exclusions) {
-          System.out.println(ex.groupID);
-          System.out.println(ex.artifactID);
-          System.out.println(ex.classifier);
-          System.out.println(ex.extension);
-        }
-      }
-  }
-
   /**
    * Checks if one artifact, the local repository and every possible way
    * of defining an exclusion is correctly parsed.
