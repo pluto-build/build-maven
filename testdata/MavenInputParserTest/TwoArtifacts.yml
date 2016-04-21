@@ -1,0 +1,9 @@
+dependencies:
+  - kind: maven
+    input:
+      local: lib
+      artifacts:
+        - name: "group:artifact:1.0::jar"
+          interval: 1
+        - name: "group1:artifact1:1.0:doc:"
+          interval: 2

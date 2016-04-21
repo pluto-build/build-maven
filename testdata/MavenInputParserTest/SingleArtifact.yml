@@ -1,0 +1,11 @@
+dependencies:
+  - kind: maven
+    input:
+      local: lib
+      artifacts:
+        - name: "group:artifact:1.0::jar"
+          optional: true
+          interval: 1
+          scope: java
+          exclusions: ["group:art:tests:jar", "group1:art1::war", "group2:art2"]
+

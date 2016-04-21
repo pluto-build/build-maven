@@ -36,7 +36,7 @@ public class MavenDependencyResolver extends Builder<MavenInput, Out<List<File>>
 
 		@Override
 		public InputParser<MavenInput> inputParser() {
-			return null;
+			return new MavenInputParser();
 		}
 	};
 

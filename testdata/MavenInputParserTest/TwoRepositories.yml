@@ -1,0 +1,11 @@
+dependencies:
+  - kind: maven
+    input:
+      local: lib
+      artifacts:
+        - name: "group:artifact:1.0::jar"
+      repositories:
+        - id: something
+          url: http://someurl.com
+        - id: other
+          url: http://otherurl.com
